@@ -1,90 +1,102 @@
-  <!-- Detailed Expertise Section -->
-    <div class="py-16 bg-white">
+<!-- expertise.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Technical Expertise - Hardware Design and Circuit Solutions" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expertise - Sanghera Systems & Circuits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <h1 class="text-xl font-bold text-gray-800">Sanghera Systems & Circuits</h1>
+                </div>
+                <div class="flex">
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">Home</a>
+                        <a href="about.html" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">About</a>
+                        <a href="expertise.html" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Expertise</a>
+                        <a href="#contact" class="text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Expertise Section -->
+    <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:text-center mb-16">
-                <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Technical Expertise</h2>
+            <div class="lg:text-center">
+                <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Expertise</h2>
                 <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                     Comprehensive Hardware Solutions
                 </p>
             </div>
 
-            <div class="space-y-16">
-                <!-- System Design & Debug -->
-                <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+            <div class="mt-10">
+                <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
+                    <!-- System Design -->
                     <div class="relative">
-                        <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
-                            System Design & Debug
-                        </h3>
-                        <p class="mt-3 text-lg text-gray-500">
-                            Expertise in developing complex hardware systems from concept to production. Specialized in creating calibration platforms, data acquisition systems, and power distribution networks. Proven track record in system-level problem solving and optimization, with experience in:
-                        </p>
-                        <ul class="mt-4 text-gray-500 space-y-2">
-                            <li>• High-precision measurement systems</li>
-                            <li>• Power distribution and sequencing</li>
-                            <li>• System integration testing</li>
-                            <li>• Performance optimization</li>
-                        </ul>
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                <!-- Icon placeholder -->
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">System Design & Debug</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Expert in developing complex hardware systems from concept to production. Specialized in creating calibration platforms, data acquisition systems, and power distribution networks. Experience includes high-precision measurement systems, power sequencing, and system integration testing.
+                        </dd>
                     </div>
-                </div>
 
-                <!-- Analog Circuit Design -->
-                <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+                    <!-- Analog Circuit Design -->
                     <div class="relative">
-                        <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
-                            Analog & Mixed-Signal Design
-                        </h3>
-                        <p class="mt-3 text-lg text-gray-500">
-                            Deep expertise in analog and mixed-signal circuit design, from component-level to system integration. Specialized experience includes:
-                        </p>
-                        <ul class="mt-4 text-gray-500 space-y-2">
-                            <li>• Low-noise power supply design (<1mV RMS)</li>
-                            <li>• High-performance amplifier circuits</li>
-                            <li>• Mixed-signal IC design for medical devices</li>
-                            <li>• High-voltage (200V) driver circuits</li>
-                        </ul>
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                <!-- Icon placeholder -->
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Analog & Mixed-Signal Design</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Deep expertise in analog and mixed-signal circuit design, from component-level to system integration. Specialized in low-noise power supplies (<1mV RMS), high-performance amplifier circuits, mixed-signal IC design for medical devices, and high-voltage driver circuits.
+                        </dd>
                     </div>
-                </div>
 
-                <!-- Digital & FPGA -->
-                <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+                    <!-- Digital & FPGA -->
                     <div class="relative">
-                        <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
-                            Digital & FPGA Development
-                        </h3>
-                        <p class="mt-3 text-lg text-gray-500">
-                            Comprehensive experience in digital design and FPGA development, including:
-                        </p>
-                        <ul class="mt-4 text-gray-500 space-y-2">
-                            <li>• Verilog RTL design and implementation</li>
-                            <li>• FPGA-based data acquisition systems</li>
-                            <li>• Digital control systems</li>
-                            <li>• Clock calibration and timing circuits</li>
-                        </ul>
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                <!-- Icon placeholder -->
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">Digital & FPGA Development</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Comprehensive experience in digital design and FPGA development, including Verilog RTL design, FPGA-based data acquisition systems, digital control systems, and clock calibration circuits. Expertise in both design and implementation of complex digital systems.
+                        </dd>
                     </div>
-                </div>
 
-                <!-- PCB Design -->
-                <div class="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+                    <!-- PCB Design -->
                     <div class="relative">
-                        <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
-                            PCB Design & Implementation
-                        </h3>
-                        <p class="mt-3 text-lg text-gray-500">
-                            Expert-level PCB design capabilities with attention to signal integrity and manufacturing optimization:
-                        </p>
-                        <ul class="mt-4 text-gray-500 space-y-2">
-                            <li>• High-speed digital design</li>
-                            <li>• Mixed-signal layout techniques</li>
-                            <li>• Power integrity optimization</li>
-                            <li>• Advanced component placement and routing</li>
-                        </ul>
+                        <dt>
+                            <div class="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                <!-- Icon placeholder -->
+                            </div>
+                            <p class="ml-16 text-lg leading-6 font-medium text-gray-900">PCB Design & Implementation</p>
+                        </dt>
+                        <dd class="mt-2 ml-16 text-base text-gray-500">
+                            Expert-level PCB design capabilities focusing on high-speed digital design, mixed-signal layout techniques, power integrity optimization, and advanced component placement. Experienced in designing complex multi-layer boards with strict signal integrity requirements.
+                        </dd>
                     </div>
-                </div>
+                </dl>
             </div>
         </div>
     </div>
 
-    <!-- Footer (same as above) -->
+    <!-- Footer -->
     <footer class="bg-white">
         <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
             <div class="mt-8 md:mt-0">
