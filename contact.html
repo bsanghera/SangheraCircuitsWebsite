@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Contact Sanghera Systems & Circuits Inc." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact - Sanghera Systems & Circuits</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header>
+    <div class="logo">
+      <h1>Sanghera Systems & Circuits Inc.</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <section class="contact-section">
+      <h2>Get In Touch</h2>
+      <p>
+        For project inquiries, quotes, or other questions, fill out the form below 
+        or reach us directly at <a href="mailto:info@sanghera-systems.com">[email protected]</a>.
+      </p>
+      <form action="https://formspree.io/f/yourFormID" method="POST" class="contact-form">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your Name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="_replyto" placeholder="Your Email" required />
+
+        <label for="subject">Subject</label>
+        <input type="text" id="subject" name="subject" placeholder="Subject" required />
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Your message here..." required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Sanghera Systems & Circuits Inc. | All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
