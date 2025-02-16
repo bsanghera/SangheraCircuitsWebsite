@@ -17,22 +17,64 @@
   gtag('config', 'G-K8DCBQ6C17');
 </script>
 <body>
-  <!-- Navigation Bar -->
-  <header>
-    <div class="flex-shrink-0 flex items-center">
-            <a href="index.html" class="text-xl font-bold text-gray-800 hover:text-indigo-600">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <!-- Use flex-col for mobile; flex-row for larger screens -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4">
+        
+        <!-- Brand/Logo Section -->
+        <div>
+          <a
+            href="index.html"
+            class="text-xl font-bold text-gray-800 hover:text-indigo-600"
+          >
             Sanghera Systems & Circuits
-            </a>
+          </a>
+        </div>
+
+        <!-- Nav Links Section -->
+        <div class="mt-4 sm:mt-0">
+          <!-- Stack links vertically on mobile, horizontally on sm+ -->
+          <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
+            <li>
+              <a
+                href="index.html"
+                class="text-gray-700 hover:text-indigo-600 text-sm font-medium"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="about.html"
+                class="text-gray-700 hover:text-indigo-600 text-sm font-medium"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="expertise.html"
+                class="text-gray-700 hover:text-indigo-600 text-sm font-medium"
+              >
+                Expertise
+              </a>
+            </li>
+            <li>
+              <a
+                href="#contact"
+                class="text-gray-700 hover:text-indigo-600 text-sm font-medium"
+              >
+                Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="services.html">Services</a></li>
-        <li><a href="index.html#contact" class="active">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+  </nav>
+
 
   <!-- Main Content -->
   <main>
