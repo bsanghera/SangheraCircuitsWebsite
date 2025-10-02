@@ -1,0 +1,75 @@
+/* Paper / moleskin vibe without external images:
+   - speckled paper texture via layered gradients
+   - subtle vertical "spine" on the left (like a notebook)
+   - soft cards and chips
+*/
+:root{
+  --paper: #fbfaf7;     /* warm off-white */
+  --ink:   #1f2a27;     /* deep green-gray */
+  --muted: #60706b;     /* soft text */
+  --card:  #ffffff;     /* entry background */
+  --ring:  #d6ddd8;     /* borders */
+  --chip:  #e8efe9;     /* pill bg */
+  --panel: #f4f1ea;     /* notebook panel */
+}
+
+body.paper-bg{
+  color: var(--ink);
+  /* paper texture: soft noise & fibers using gradients */
+  background:
+    radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px) 0 0/6px 6px,
+    linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02)) 0 0/100% 100%, 
+    linear-gradient(90deg, rgba(30,30,30,0.06), rgba(30,30,30,0.0) 70%) 0 0/16px 100%,
+    var(--paper);
+  /* the third layer creates a faint left "spine" */
+}
+
+/* Cards & panels */
+.entry-card{
+  background: var(--card);
+  border: 1px solid var(--ring);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+}
+
+.notebook-panel{
+  background: var(--panel);
+  border: 1px solid var(--ring);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+/* Stats small cards */
+.stat-card{
+  background: #f6f4ee;
+  border: 1px solid var(--ring);
+  border-radius: 12px;
+  padding: 12px 10px;
+}
+
+/* Chip */
+.chip{
+  display:inline-block;
+  background: var(--chip);
+  border: 1px solid var(--ring);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink);
+}
+
+/* Typography niceties */
+.prose{
+  line-height: 1.7;
+  color: var(--ink);
+}
+.prose p{ margin: 0.6rem 0; }
+.prose strong{ font-weight: 600; }
+.prose em{ font-style: italic; }
+
+/* A11y helper */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); border:0;
+}
