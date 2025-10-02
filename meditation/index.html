@@ -347,48 +347,78 @@
         </div>
     </div>
 
-    <!-- Password Modal -->
-    <div class="modal" id="passwordModal">
-        <div class="modal-content">
-            <h2>Enter Password</h2>
-            <div class="error-message" id="passwordError">Incorrect password. Please try again.</div>
-            <form id="passwordForm">
-                <div class="form-group">
-                    <label for="passwordInput">Password</label>
-                    <input type="password" id="passwordInput" required autocomplete="off">
-                </div>
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <script>
+      async function loadJSON(path){
+        const r = await fetch(path, {cache: "no-store"});
+        if(!r.ok) throw new Error("Fetch failed: " + path);
+        return r.json();
+      }
 
-    <!-- Session Modal -->
-    <div class="modal" id="sessionModal">
-        <div class="modal-content">
-            <h2 id="modalTitle">Add Meditation Session</h2>
-            <form id="sessionForm">
-                <div class="form-group">
-                    <label for="sessionDate">Date</label>
-                    <input type="date" id="sessionDate" required>
-                </div>
-                <div class="form-group">
-                    <label for="sessionDuration">Duration (minutes)</label>
-                    <input type="number" id="sessionDuration" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="sessionNotes">Notes & Reflections</label>
-                    <textarea id="sessionNotes" placeholder="What did you experience? Any insights or observations?"></textarea>
-                </div>
-                <div class="button-group">
-                    <button type="button" class="btn btn-secondary" onclick="closeSessionModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Session</button>
-                </div>
-            </form>
-        </div>
-    </div>
+      // Adjust to "data/..." if you're on a project site (username.github.io/repo)
+      Promise.all([
+        loadJSON("/meditation/data/entries.json"),
+        loadJSON("/meditation/data/takeaways.json")
+      ]).then(([E, T]) => {
+        const sessions = (E && Array.isArray(E.entries)) ? E.entries : [];
+        const takeaways = (T && Array.isArray(T.items)) ? T.items : [];
+        fillTakeaways(takeaways);
+        renderSessions(sessions);
+        updateStats(sessions);
+      }).catch(err => {
+        console.error(err);
+        document.getElementById('sessionsList').innerHTML =
+          '<div class="empty-state"><p>Could not load entries.</p></div>';
+      });
+
+      function fillTakeaways(items){
+        const ul = document.getElementById('takeawaysList');
+        ul.innerHTML = (items || []).map(x => `<li>${escapeHTML(x)}</li>`).join("");
+      }
+
+      function escapeHTML(t=''){
+        return t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      }
+
+      function formatDate(dateStr){
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+      }
+
+      function renderSessions(sessions){
+        const container = document.getElementById('sessionsList');
+        if (!sessions.length){
+          container.innerHTML = `
+            <div class="empty-state">
+              <p>No sessions yet</p>
+              <p style="font-size: 0.9em;">Add your first session in the admin</p>
+            </div>`;
+          return;
+        }
+        const sorted = [...sessions].sort((a,b)=> new Date(b.date) - new Date(a.date));
+        container.innerHTML = sorted.map(s => `
+          <div class="session-card">
+            <div class="session-header">
+              <div class="session-date">${formatDate(s.date)}</div>
+              <div class="session-duration">${parseInt(s.duration,10) || 0} min</div>
+            </div>
+            <div class="session-notes">${escapeHTML(s.notes || '').replace(/\n/g,'<br>')}</div>
+          </div>
+        `).join('');
+      }
+
+      function updateStats(sessions){
+        const y = new Date().getFullYear();
+        const daysThisYear = new Set(
+          sessions.filter(s => new Date(s.date + 'T00:00:00').getFullYear() === y)
+                  .map(s => s.date)
+        ).size;
+        const totalMinutes = sessions.reduce((a, s) => a + (parseInt(s.duration,10)||0), 0);
+        document.getElementById('daysThisYear').textContent = daysThisYear;
+        document.getElementById('totalSessions').textContent = sessions.length;
+        document.getElementById('totalMinutes').textContent = totalMinutes;
+      }
+    </script>
+
 
     <script>
         // ============================================
