@@ -6,13 +6,21 @@
   <title>Meditation Admin</title>
 </head>
 <body>
-  <!-- Point Decap CMS to your config file explicitly -->
+  <!-- Force manual init so we can set the config path explicitly -->
   <script>
-    // Publish path of your config.yml
-    window.CMS_CONFIG_PATH = "/meditation/admin/config.yml";
+    window.CMS_MANUAL_INIT = true;
   </script>
 
   <!-- Load Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <!-- Now initialize with an explicit config path (cache-busted) -->
+  <script>
+    (function () {
+      // Use a cache-buster so old config isn't cached by the browser/CDN
+      const cfg = "/meditation/admin/config.yml?v=" + Date.now();
+      CMS.init({ configPath: cfg });
+    })();
+  </script>
 </body>
 </html>
