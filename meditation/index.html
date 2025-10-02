@@ -1,43 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Meditation Admin</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meditation Journal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f1e8; /* gentle cream */
+      color: #2c2416;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 50px; padding-top: 30px; }
+    h1 { font-size: 2.5em; font-weight: 300; margin-bottom: 10px; color: #1a1510; }
+    .subtitle { font-size: 1.1em; color: #6b5d4f; font-weight: 300; }
+
+    .stats-card {
+      background: #fff; border-radius: 12px; padding: 30px; margin-bottom: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 2.5em; font-weight: 300; color: #8b7355; }
+    .stat-label { font-size: 0.9em; color: #6b5d4f; text-transform: uppercase; letter-spacing: 1px; }
+
+    .takeaways { margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5dcc8; }
+    .takeaways h2 { font-size: 1.3em; font-weight: 400; margin-bottom: 20px; color: #1a1510; }
+    .takeaways-content { background: #faf8f3; padding: 20px 25px; border-radius: 8px; border-left: 3px solid #8b7355; }
+    .takeaways-list { list-style: none; }
+    .takeaways-list li { margin-bottom: 12px; padding-left: 25px; position: relative; }
+    .takeaways-list li:before { content: "•"; position: absolute; left: 0; color: #8b7355; font-weight: bold; font-size: 1.3em; }
+
+    .add-session-btn {
+      background: #8b7355; color: white; border: none; padding: 14px 28px;
+      border-radius: 8px; font-size: 1em; cursor: pointer; margin-bottom: 30px;
+      transition: background 0.2s;
+    }
+    .add-session-btn:hover { background: #6b5d4f; }
+
+    .sessions-list { margin-top: 30px; }
+    .session-card {
+      background: #fff; border-radius: 10px; padding: 25px; margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: box-shadow 0.2s;
+    }
+    .session-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .session-date { font-weight: 500; color: #1a1510; font-size: 1.1em; }
+    .session-duration { background: #f0e9db; padding: 6px 14px; border-radius: 20px; font-size: 0.9em; color: #6b5d4f; }
+    .session-notes { color: #4a3f32; line-height: 1.7; white-space: pre-wrap; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #8b7355; }
+    .empty-state p { font-size: 1.1em; margin-bottom: 20px; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2em; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-  <!-- OAuth rebroadcast shim -->
+  <div class="container">
+    <header>
+      <h1>Meditation Journal</h1>
+      <p class="subtitle">A space for reflection and growth</p>
+    </header>
+
+    <div class="stats-card">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" id="daysThisYear">0</div>
+          <div class="stat-label">Days This Year</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="totalSessions">0</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="totalMinutes">0</div>
+          <div class="stat-label">Minutes</div>
+        </div>
+      </div>
+
+      <div class="takeaways">
+        <h2>Key Takeaways</h2>
+        <div class="takeaways-content">
+          <ul class="takeaways-list" id="takeawaysList"></ul>
+        </div>
+      </div>
+    </div>
+
+    <button class="add-session-btn" onclick="location.href='/meditation/admin'">
+      + Add Meditation Session
+    </button>
+
+    <div class="sessions-list" id="sessionsList">
+      <div class="empty-state">
+        <p>No sessions yet</p>
+        <p style="font-size: 0.9em;">Add your first session in the admin</p>
+      </div>
+    </div>
+  </div>
+
   <script>
-    (function () {
-      function rebroadcastFromHash() {
-        try {
-          var m = location.hash && location.hash.match(/access_token=([^&]+)/);
-          if (!m) return;
-          var token = decodeURIComponent(m[1]);
+    async function loadJSON(path){
+      const r = await fetch(path, { cache: "no-store" });
+      if (!r.ok) throw new Error("Fetch failed: " + path);
+      return r.json();
+    }
 
-          // Send in every format Decap has used across versions
-          window.postMessage('authorization:github:success:' + token, '*');
-          window.postMessage('authorization:github:success', '*');
-          window.postMessage({ token: token }, '*');
-          window.postMessage({ type: 'authorization:github', status: 'success', token: token }, '*');
+    // If you were hosting as a project site (username.github.io/repo), switch to "data/..." instead of "/meditation/data/..."
+    Promise.all([
+      loadJSON("/meditation/data/entries.json"),
+      loadJSON("/meditation/data/takeaways.json")
+    ]).then(([E, T]) => {
+      const sessions = (E && Array.isArray(E.entries)) ? E.entries : [];
+      const takeaways = (T && Array.isArray(T.items)) ? T.items : [];
+      fillTakeaways(takeaways);
+      renderSessions(sessions);
+      updateStats(sessions);
+    }).catch(err => {
+      console.error(err);
+      document.getElementById('sessionsList').innerHTML =
+        '<div class="empty-state"><p>Could not load entries.</p></div>';
+    });
 
-          // Clean the URL
-          history.replaceState(null, '', location.pathname + location.search);
-        } catch (e) { /* ignore */ }
+    function fillTakeaways(items){
+      const ul = document.getElementById('takeawaysList');
+      ul.innerHTML = (items || []).map(x => `<li>${escapeHTML(x)}</li>`).join("");
+    }
+
+    function escapeHTML(t=''){
+      return t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    }
+
+    function formatDate(dateStr){
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    }
+
+    function renderSessions(sessions){
+      const container = document.getElementById('sessionsList');
+      if (!sessions.length){
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>No sessions yet</p>
+            <p style="font-size: 0.9em;">Add your first session in the admin</p>
+          </div>`;
+        return;
       }
-      rebroadcastFromHash();
-      window.addEventListener('hashchange', rebroadcastFromHash);
-    })();
-  </script>
+      const sorted = [...sessions].sort((a,b)=> new Date(b.date) - new Date(a.date));
+      container.innerHTML = sorted.map(s => `
+        <div class="session-card">
+          <div class="session-header">
+            <div class="session-date">${formatDate(s.date)}</div>
+            <div class="session-duration">${parseInt(s.duration,10) || 0} min</div>
+          </div>
+          <div class="session-notes">${escapeHTML(s.notes || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
 
-  <!-- Force Decap to use our config -->
-  <script>window.CMS_MANUAL_INIT = true;</script>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
-    (function () {
-      var cfg = "/meditation/admin/config.yml?v=" + Date.now(); // cache-bust
-      CMS.init({ configPath: cfg });
-    })();
+    function updateStats(sessions){
+      const y = new Date().getFullYear();
+      const daysThisYear = new Set(
+        sessions.filter(s => new Date(s.date + 'T00:00:00').getFullYear() === y)
+                .map(s => s.date)
+      ).size;
+      const totalMinutes = sessions.reduce((a, s) => a + (parseInt(s.duration,10)||0), 0);
+      document.getElementById('daysThisYear').textContent = daysThisYear;
+      document.getElementById('totalSessions').textContent = sessions.length;
+      document.getElementById('totalMinutes').textContent = totalMinutes;
+    }
   </script>
 </body>
 </html>
