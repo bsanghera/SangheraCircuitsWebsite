@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Meditation — Sanghera Systems & Circuits</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Daily meditation log and reflections.">
+  <!-- Tailwind (same CDN you use on the homepage) -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/>
+  <link rel="stylesheet" href="/meditation/meditation.css">
+</head>
+<body class="paper-bg text-gray-900">
+
+  <!-- Page wrapper -->
+  <div class="mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Hero -->
+      <header class="pt-12 sm:pt-16">
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
+          Stillness Notes
+        </h1>
+        <p class="text-gray-600">
+          Daily reflections to stay consistent and present.
+        </p>
+
+        <!-- Stats -->
+        <div class="mt-6 grid grid-cols-3 gap-3">
+          <div class="stat-card text-center">
+            <div id="streak" class="text-3xl font-bold">0</div>
+            <div class="text-xs text-gray-500">day streak</div>
+          </div>
+          <div class="stat-card text-center">
+            <div id="total-min" class="text-3xl font-bold">0</div>
+            <div class="text-xs text-gray-500">total minutes</div>
+          </div>
+          <div class="stat-card text-center">
+            <div id="entry-count" class="text-3xl font-bold">0</div>
+            <div class="text-xs text-gray-500">entries</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Key takeaways -->
+      <section class="mt-10 notebook-panel">
+        <h2 class="text-xl font-semibold mb-2">Key Takeaways</h2>
+        <ul class="list-disc pl-5 space-y-1">
+          <!-- Edit these bullets any time -->
+          <li>Breathe out a touch longer; shoulders follow.</li>
+          <li>Name the distraction gently; return to breath.</li>
+          <li>Quick 2-min body scan settles the mind.</li>
+        </ul>
+      </section>
+
+      <!-- Entries -->
+      <main class="mt-10 space-y-6">
+        <h2 class="sr-only">All Sessions</h2>
+        <div id="entries"></div>
+      </main>
+
+      <footer class="py-16"></footer>
+    </div>
+  </div>
+
+  <script>
+    // ==== YOUR DATA (date, dur, notes) ====
+    // Add a new entry by appending another object to this array.
+    // date: ISO string or "YYYY-MM-DD HH:MM"
+    const MEDITATIONS = [
+      { date: "2025-09-27 07:45", dur: 15, notes: "Felt scattered; by minute 5 breath smoothed out. Urges to check phone—noticed, labeled, returned." },
+      { date: "2025-09-28 08:10", dur: 12, notes: "Short sit. Body scan calmed jitters; attention wandered at ~8–9 min, soft redirect." },
+      // add more...
+    ];
+    // ======================================
+
+    // Render entries (most recent first)
+    const entries = [...MEDITATIONS].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const container = document.getElementById('entries');
+
+    for (const e of entries) {
+      const d = new Date(e.date);
+      const dateStr = d.toLocaleString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      });
+      const card = document.createElement('article');
+      card.className = 'entry-card';
+      card.innerHTML = `
+        <header class="flex items-center justify-between flex-wrap gap-2">
+          <time class="text-sm text-gray-600">${dateStr}</time>
+          <span class="chip">${e.dur || 0} min</span>
+        </header>
+        <div class="prose notes mt-3">${escapeAndBreak(e.notes)}</div>
+      `;
+      container.appendChild(card);
+    }
+
+    // Stats
+    const minutesByDay = {};
+    for (const x of MEDITATIONS) {
+      const d = new Date(x.date);
+      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year:'numeric', month:'2-digit', day:'2-digit' })
+        .formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+      const dayKey = `${parts.year}-${parts.month}-${parts.day}`;
+      minutesByDay[dayKey] = (minutesByDay[dayKey]||0) + (parseInt(x.dur,10)||0);
+    }
+    const totalMin = MEDITATIONS.reduce((s,x)=>s+(parseInt(x.dur,10)||0),0);
+    document.getElementById('total-min').textContent = totalMin;
+    document.getElementById('entry-count').textContent = MEDITATIONS.length;
+
+    // Streak ending today in America/Los_Angeles
+    function streakInTZ(tz) {
+      let s = 0;
+      const today = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
+      today.setHours(0,0,0,0);
+      // Walk back 365 days max
+      for (let i=0; i<365; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const parts = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' })
+          .formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
+        const key = `${parts.year}-${parts.month}-${parts.day}`;
+        if ((minutesByDay[key]||0) >= 1) s++;
+        else break;
+      }
+      return s;
+    }
+    document.getElementById('streak').textContent = streakInTZ('America/Los_Angeles');
+
+    // Helpers
+    function escapeAndBreak(text='') {
+      const esc = text.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+      return esc.replace(/\n/g,'<br>');
+    }
+  </script>
+</body>
+</html>
