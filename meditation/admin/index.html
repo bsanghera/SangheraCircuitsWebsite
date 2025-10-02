@@ -6,31 +6,43 @@
   <title>Meditation Admin</title>
 </head>
 <body>
-  <!-- Shim: if the Worker put #access_token=... in the opener URL, rebroadcast it to Decap in all formats -->
+  <!-- Shim: capture token from popup in any format, store it where Decap expects, then reload -->
   <script>
     (function () {
-      function rebroadcastFromHash() {
+      function storeAndReload(token) {
         try {
-          var m = location.hash && location.hash.match(/access_token=([^&]+)/);
-          if (!m) return;
-          var token = decodeURIComponent(m[1]);
-
-          // Broadcast in all formats used by Decap across versions
-          window.postMessage('authorization:github:success:' + token, '*');
-          window.postMessage('authorization:github:success', '*');
-          window.postMessage({ token: token }, '*');
-          window.postMessage({ type: 'authorization:github', status: 'success', token: token }, '*');
-
-          // Clean the URL so the hash doesn't stick around
-          history.replaceState(null, '', location.pathname + location.search);
+          // cover both Decap and legacy Netlify CMS key names
+          localStorage.setItem('decap-cms-oauth-token', token);
+          localStorage.setItem('netlify-cms-oauth-token', token);
         } catch (e) {}
+        // clean any access_token hash that the Worker may have added
+        try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+        location.reload();
       }
-      rebroadcastFromHash();
-      window.addEventListener('hashchange', rebroadcastFromHash);
+
+      // 1) If the Worker put #access_token in the URL, use it
+      (function fromHash() {
+        var m = location.hash && location.hash.match(/access_token=([^&]+)/);
+        if (m) storeAndReload(decodeURIComponent(m[1]));
+      })();
+
+      // 2) Listen for postMessage from the Worker popup (all known formats)
+      window.addEventListener('message', function (e) {
+        var d = e.data; var token = null;
+        if (typeof d === 'string') {
+          var m = d.match(/^authorization:github:success:([^]+)$/);
+          if (m) token = m[1];
+        }
+        if (!token && d && typeof d === 'object') {
+          if (d.token) token = d.token;
+          if (!token && d.type === 'authorization:github' && d.status === 'success' && d.token) token = d.token;
+        }
+        if (token) storeAndReload(token);
+      });
     })();
   </script>
 
-  <!-- Load Decap CMS (newer build) -->
+  <!-- Load Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 </body>
 </html>
