@@ -1,0 +1,33 @@
+backend:
+  name: github
+  repo: bsanghera/SangheraCircuitsWebsite/
+  branch: main
+  base_url: https://sangheracircuits.com/
+  auth_endpoint: /auth
+
+media_folder: "meditation/uploads"
+public_folder: "/meditation/uploads"
+
+collections:
+  - name: "entries"
+    label: "Meditation Entries"
+    format: "json"
+    file: "meditation/data/entries.json"
+    fields:
+      - label: "Entries"
+        name: "entries"
+        widget: "list"
+        fields:
+          - { label: "Date", name: "date", widget: "date" }
+          - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
+          - { label: "Notes", name: "notes", widget: "text", required: false }
+
+  - name: "takeaways"
+    label: "Key Takeaways"
+    format: "json"
+    file: "meditation/data/takeaways.json"
+    fields:
+      - label: "Items"
+        name: "items"
+        widget: "list"
+        field: { label: "Takeaway", name: "item", widget: "string" }
