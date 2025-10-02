@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Meditation Admin</title>
 </head>
 <body>
-  <!-- Shim: if the popup put #access_token=... in the opener URL, rebroadcast it -->
+  <!-- OAuth rebroadcast shim -->
   <script>
     (function () {
       function rebroadcastFromHash() {
@@ -25,14 +25,19 @@
           history.replaceState(null, '', location.pathname + location.search);
         } catch (e) { /* ignore */ }
       }
-
-      // Run ASAP and also after the CMS script loads
       rebroadcastFromHash();
       window.addEventListener('hashchange', rebroadcastFromHash);
     })();
   </script>
 
-  <!-- Load Decap CMS -->
+  <!-- Force Decap to use our config -->
+  <script>window.CMS_MANUAL_INIT = true;</script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    (function () {
+      var cfg = "/meditation/admin/config.yml?v=" + Date.now(); // cache-bust
+      CMS.init({ configPath: cfg });
+    })();
+  </script>
 </body>
 </html>
