@@ -2,23 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Meditation Admin</title>
 </head>
 <body>
-  <!-- Force manual init so we can set the config path explicitly -->
-  <script>
-    window.CMS_MANUAL_INIT = true;
-  </script>
-
-  <!-- Load Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-  <!-- Now initialize with an explicit config path (cache-busted) -->
+  <!-- OAuth rebroadcast shim -->
   <script>
     (function () {
-      // Use a cache-buster so old config isn't cached by the browser/CDN
-      const cfg = "/meditation/admin/config.yml?v=" + Date.now();
+      function rebroadcastFromHash() {
+        try {
+          var m = location.hash && location.hash.match(/access_token=([^&]+)/);
+          if (!m) return;
+          var token = decodeURIComponent(m[1]);
+
+          // Send in every format Decap has used across versions
+          window.postMessage('authorization:github:success:' + token, '*');
+          window.postMessage('authorization:github:success', '*');
+          window.postMessage({ token: token }, '*');
+          window.postMessage({ type: 'authorization:github', status: 'success', token: token }, '*');
+
+          // Clean the URL
+          history.replaceState(null, '', location.pathname + location.search);
+        } catch (e) { /* ignore */ }
+      }
+      rebroadcastFromHash();
+      window.addEventListener('hashchange', rebroadcastFromHash);
+    })();
+  </script>
+
+  <!-- Force Decap to use our config -->
+  <script>window.CMS_MANUAL_INIT = true;</script>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    (function () {
+      var cfg = "/meditation/admin/config.yml?v=" + Date.now(); // cache-bust
       CMS.init({ configPath: cfg });
     })();
   </script>
