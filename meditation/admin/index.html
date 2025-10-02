@@ -1,8 +1,18 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meditation Admin</title></head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meditation Admin</title>
+</head>
 <body>
+  <!-- Point Decap CMS to your config file explicitly -->
+  <script>
+    // Publish path of your config.yml
+    window.CMS_CONFIG_PATH = "/meditation/admin/config.yml";
+  </script>
+
+  <!-- Load Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
