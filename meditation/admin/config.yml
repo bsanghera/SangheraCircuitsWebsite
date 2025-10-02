@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: bsanghera/SangheraCircuitsWebsite
+  repo: bsanghera/SangheraCircuitsWebsite   # <- no trailing slash
   branch: main
   base_url: https://late-cell-3508.bsanghera27.workers.dev
   auth_endpoint: /auth
