@@ -1,138 +1,541 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Meditation — Sanghera Systems & Circuits</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Daily meditation log and reflections.">
-  <!-- Tailwind (same CDN you use on the homepage) -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"/>
-  <link rel="stylesheet" href="/meditation/meditation.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meditation Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f1e8;
+            color: #2c2416;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            color: #1a1510;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #6b5d4f;
+            font-weight: 300;
+        }
+
+        .stats-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 300;
+            color: #8b7355;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #6b5d4f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .takeaways {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e5dcc8;
+        }
+
+        .takeaways h2 {
+            font-size: 1.3em;
+            font-weight: 400;
+            margin-bottom: 20px;
+            color: #1a1510;
+        }
+
+        .takeaways-content {
+            background: #faf8f3;
+            padding: 20px 25px;
+            border-radius: 8px;
+            border-left: 3px solid #8b7355;
+        }
+
+        .takeaways-list {
+            list-style: none;
+        }
+
+        .takeaways-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .takeaways-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #8b7355;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .add-session-btn {
+            background: #8b7355;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background 0.2s;
+        }
+
+        .add-session-btn:hover {
+            background: #6b5d4f;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a3f32;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4c9b5;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            background: #faf8f3;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #8b7355;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6b5d4f;
+        }
+
+        .btn-secondary {
+            background: #e5dcc8;
+            color: #4a3f32;
+        }
+
+        .btn-secondary:hover {
+            background: #d4c9b5;
+        }
+
+        .sessions-list {
+            margin-top: 30px;
+        }
+
+        .session-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+        }
+
+        .session-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .session-date {
+            font-weight: 500;
+            color: #1a1510;
+            font-size: 1.1em;
+        }
+
+        .session-duration {
+            background: #f0e9db;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #6b5d4f;
+        }
+
+        .session-notes {
+            color: #4a3f32;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b7355;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="paper-bg text-gray-900">
-
-  <!-- Page wrapper -->
-  <div class="mx-auto px-4 sm:px-6">
-    <div class="max-w-3xl mx-auto">
-
-      <!-- Hero -->
-      <header class="pt-12 sm:pt-16">
-        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
-          Meditation Notes
-        </h1>
-        <p class="text-gray-600">
-          The decade of recokoning. Daily reflections to stay consistent and present.
-        </p>
-
-        <!-- Stats -->
-        <div class="mt-6 grid grid-cols-3 gap-3">
-          <div class="stat-card text-center">
-            <div id="streak" class="text-3xl font-bold">0</div>
-            <div class="text-xs text-gray-500">day streak</div>
-          </div>
-          <div class="stat-card text-center">
-            <div id="total-min" class="text-3xl font-bold">0</div>
-            <div class="text-xs text-gray-500">total minutes</div>
-          </div>
-          <div class="stat-card text-center">
-            <div id="entry-count" class="text-3xl font-bold">0</div>
-            <div class="text-xs text-gray-500">entries</div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Key takeaways -->
-      <section class="mt-10 notebook-panel">
-        <h2 class="text-xl font-semibold mb-2">Key Takeaways</h2>
-        <ul class="list-disc pl-5 space-y-1">
-          <!-- Edit these bullets any time -->
-          <li>Breathe out a touch longer; shoulders follow.</li>
-          <li>Name the distraction gently; return to breath.</li>
-          <li>Quick 2-min body scan settles the mind.</li>
-        </ul>
-      </section>
-
-      <!-- Entries -->
-      <main class="mt-10 space-y-6">
-        <h2 class="sr-only">All Sessions</h2>
-        <div id="entries"></div>
-      </main>
-
-      <footer class="py-16"></footer>
-    </div>
-  </div>
-
-  <script>
-    // ==== YOUR DATA (date, dur, notes) ====
-    // Add a new entry by appending another object to this array.
-    // date: ISO string or "YYYY-MM-DD HH:MM"
-    const MEDITATIONS = [
-      { date: "2025-09-27 07:45", dur: 15, notes: "Felt scattered; by minute 5 breath smoothed out. Urges to check phone—noticed, labeled, returned." },
-      { date: "2025-09-28 08:10", dur: 12, notes: "Short sit. Body scan calmed jitters; attention wandered at ~8–9 min, soft redirect." },
-      // add more...
-    ];
-    // ======================================
-
-    // Render entries (most recent first)
-    const entries = [...MEDITATIONS].sort((a,b)=>new Date(b.date)-new Date(a.date));
-    const container = document.getElementById('entries');
-
-    for (const e of entries) {
-      const d = new Date(e.date);
-      const dateStr = d.toLocaleString('en-US', {
-        month: 'long', day: 'numeric', year: 'numeric',
-        hour: 'numeric', minute: '2-digit'
-      });
-      const card = document.createElement('article');
-      card.className = 'entry-card';
-      card.innerHTML = `
-        <header class="flex items-center justify-between flex-wrap gap-2">
-          <time class="text-sm text-gray-600">${dateStr}</time>
-          <span class="chip">${e.dur || 0} min</span>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meditation Journal</h1>
+            <p class="subtitle">A space for reflection and growth</p>
         </header>
-        <div class="prose notes mt-3">${escapeAndBreak(e.notes)}</div>
-      `;
-      container.appendChild(card);
-    }
 
-    // Stats
-    const minutesByDay = {};
-    for (const x of MEDITATIONS) {
-      const d = new Date(x.date);
-      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year:'numeric', month:'2-digit', day:'2-digit' })
-        .formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
-      const dayKey = `${parts.year}-${parts.month}-${parts.day}`;
-      minutesByDay[dayKey] = (minutesByDay[dayKey]||0) + (parseInt(x.dur,10)||0);
-    }
-    const totalMin = MEDITATIONS.reduce((s,x)=>s+(parseInt(x.dur,10)||0),0);
-    document.getElementById('total-min').textContent = totalMin;
-    document.getElementById('entry-count').textContent = MEDITATIONS.length;
+        <div class="stats-card">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="daysThisYear">0</div>
+                    <div class="stat-label">Days This Year</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSessions">0</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalMinutes">0</div>
+                    <div class="stat-label">Minutes</div>
+                </div>
+            </div>
 
-    // Streak ending today in America/Los_Angeles
-    function streakInTZ(tz) {
-      let s = 0;
-      const today = new Date(new Date().toLocaleString('en-US', { timeZone: tz }));
-      today.setHours(0,0,0,0);
-      // Walk back 365 days max
-      for (let i=0; i<365; i++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() - i);
-        const parts = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit' })
-          .formatToParts(d).reduce((o,p)=>(o[p.type]=p.value,o),{});
-        const key = `${parts.year}-${parts.month}-${parts.day}`;
-        if ((minutesByDay[key]||0) >= 1) s++;
-        else break;
-      }
-      return s;
-    }
-    document.getElementById('streak').textContent = streakInTZ('America/Los_Angeles');
+            <div class="takeaways">
+                <h2>Key Takeaways</h2>
+                <div class="takeaways-content">
+                    <ul class="takeaways-list" id="takeawaysList">
+                        <li>Consistency matters more than duration</li>
+                        <li>Breath awareness is the foundation of presence</li>
+                        <li>Thoughts are not facts - observe without attachment</li>
+                        <li>Progress is non-linear, and that's okay</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-    // Helpers
-    function escapeAndBreak(text='') {
-      const esc = text.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-      return esc.replace(/\n/g,'<br>');
-    }
-  </script>
+        <button class="add-session-btn" onclick="openModal()">+ Add Meditation Session</button>
+
+        <div class="sessions-list" id="sessionsList">
+            <div class="empty-state">
+                <p>No sessions yet</p>
+                <p style="font-size: 0.9em;">Start your journey by adding your first meditation session</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <div class="error-message" id="passwordError">Incorrect password. Please try again.</div>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" id="passwordInput" required autocomplete="off">
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Session Modal -->
+    <div class="modal" id="sessionModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Meditation Session</h2>
+            <form id="sessionForm">
+                <div class="form-group">
+                    <label for="sessionDate">Date</label>
+                    <input type="date" id="sessionDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="sessionDuration">Duration (minutes)</label>
+                    <input type="number" id="sessionDuration" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="sessionNotes">Notes & Reflections</label>
+                    <textarea id="sessionNotes" placeholder="What did you experience? Any insights or observations?"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="closeSessionModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CHANGE YOUR PASSWORD HERE (line below)
+        // ============================================
+        const PASSWORD_HASH = 'e3d3e43821108ed60587e96e2c8747c4d00b534fca82db34f876e5b79015ed72'; 
+        
+        // To set your own password:
+        // 1. Go to: https://emn178.github.io/online-tools/sha256.html
+        // 2. Type your desired password
+        // 3. Copy the hash result
+        // 4. Replace the hash above with your new hash
+        // ============================================
+
+        let sessions = [];
+        let isAuthenticated = false;
+
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function openModal() {
+            if (!isAuthenticated) {
+                document.getElementById('passwordModal').classList.add('active');
+                document.getElementById('passwordError').classList.remove('show');
+                document.getElementById('passwordInput').focus();
+            } else {
+                openSessionModal();
+            }
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('active');
+            document.getElementById('passwordForm').reset();
+            document.getElementById('passwordError').classList.remove('show');
+        }
+
+        function openSessionModal() {
+            document.getElementById('sessionModal').classList.add('active');
+            document.getElementById('sessionDate').valueAsDate = new Date();
+        }
+
+        function closeSessionModal() {
+            document.getElementById('sessionModal').classList.remove('active');
+            document.getElementById('sessionForm').reset();
+        }
+
+        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('passwordInput').value;
+            const hash = await hashPassword(password);
+            
+            if (hash === PASSWORD_HASH) {
+                isAuthenticated = true;
+                closePasswordModal();
+                openSessionModal();
+            } else {
+                document.getElementById('passwordError').classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        });
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        function updateStats() {
+            const currentYear = new Date().getFullYear();
+            const daysThisYear = new Set(
+                sessions
+                    .filter(s => new Date(s.date).getFullYear() === currentYear)
+                    .map(s => s.date)
+            ).size;
+            
+            const totalMinutes = sessions.reduce((sum, s) => sum + parseInt(s.duration), 0);
+
+            document.getElementById('daysThisYear').textContent = daysThisYear;
+            document.getElementById('totalSessions').textContent = sessions.length;
+            document.getElementById('totalMinutes').textContent = totalMinutes;
+        }
+
+        function renderSessions() {
+            const container = document.getElementById('sessionsList');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No sessions yet</p>
+                        <p style="font-size: 0.9em;">Start your journey by adding your first meditation session</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const sortedSessions = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sortedSessions.map(session => `
+                <div class="session-card">
+                    <div class="session-header">
+                        <div class="session-date">${formatDate(session.date)}</div>
+                        <div class="session-duration">${session.duration} min</div>
+                    </div>
+                    <div class="session-notes">${session.notes || 'No notes for this session'}</div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('sessionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newSession = {
+                date: document.getElementById('sessionDate').value,
+                duration: document.getElementById('sessionDuration').value,
+                notes: document.getElementById('sessionNotes').value
+            };
+
+            sessions.push(newSession);
+            updateStats();
+            renderSessions();
+            closeSessionModal();
+        });
+
+        document.getElementById('passwordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePasswordModal();
+            }
+        });
+
+        document.getElementById('sessionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSessionModal();
+            }
+        });
+
+        updateStats();
+    </script>
 </body>
 </html>
