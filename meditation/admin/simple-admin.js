@@ -231,4 +231,34 @@ els.tabs.forEach(btn => {
 
 /* ----- Auth buttons ----- */
 els.loginBtn.addEventListener('click', () => {
-  co
+  const w = window.open(`${OAUTH_BASE}/auth`, 'ghoauth', 'width=900,height=700');
+  // Fallback: listen for hash-callback after popup posts the token & redirects
+  const timer = setInterval(() => {
+    const tok = getToken();
+    if (tok) { clearInterval(timer); afterLogin(); }
+  }, 400);
+});
+els.logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('gh_token');
+  setLoggedOutUI();
+});
+
+/* ----- Boot ----- */
+async function afterLogin() {
+  try {
+    const user = await getUser();
+    setAuthedUI(user);
+    await loadAll();
+  } catch (err) {
+    console.error(err);
+    toast("Auth failed—try logging in again.");
+    setLoggedOutUI();
+  }
+}
+
+(async function boot() {
+  // preferred: read token from hash (popup redirect) or from localStorage
+  getToken();
+  const tok = localStorage.getItem('gh_token');
+  if (tok) { await afterLogin(); } else { setLoggedOutUI(); }
+})();
