@@ -5,6 +5,7 @@ backend:
   base_url: https://late-cell-3508.bsanghera27.workers.dev
   auth_endpoint: /auth
 
+
 media_folder: "meditation/uploads"
 public_folder: "/meditation/uploads"
 
