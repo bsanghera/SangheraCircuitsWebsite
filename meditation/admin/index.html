@@ -1,49 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Meditation Admin</title>
 </head>
 <body>
-  <div id="loading">Loading admin...</div>
-
-  <script>
-    // Guard to ensure CMS loads only once
-    let cmsLoaded = false;
-
-    function initCMS() {
-      if (cmsLoaded) return;
-      cmsLoaded = true;
-
-      // Dynamically load Decap only after auth
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
-      document.body.appendChild(script);
-
-      script.onload = () => {
-        console.log("[admin] Decap CMS loaded");
-        document.getElementById('loading').style.display = 'none';
-      };
-    }
-
-    // If we already have a token stored, initialize immediately
-    if (localStorage.getItem("decap-cms-auth")) {
-      console.log("[admin] Found existing token, starting CMS");
-      initCMS();
-    }
-
-    // Otherwise, wait for GitHub OAuth popup to send us the token
-    window.addEventListener("message", (e) => {
-      if (e.data?.token && e.data?.status === "success") {
-        console.log("[admin] Received token via postMessage", e.data);
-        localStorage.setItem("decap-cms-auth", JSON.stringify({
-          token: e.data.token,
-          provider: "github"
-        }));
-        initCMS();
-      }
-    });
-  </script>
+  <!-- Decap handles OAuth + UI; no custom JS needed -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
