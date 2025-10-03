@@ -11,29 +11,22 @@ public_folder: "/meditation/uploads"
 collections:
   - name: "entries"
     label: "Meditation Entries"
-    files:
-      - label: "Meditation Entries"
-        name: "entries"
-        file: "meditation/data/entries.json"
-        format: "json"
-        fields:
-          - label: "Entries"
-            name: "entries"
-            widget: "list"
-            fields:
-              - { label: "Date", name: "date", widget: "date" }
-              - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
-              - { label: "Notes", name: "notes", widget: "text", required: false }
+    folder: "meditation/data/entries"
+    extension: "json"
+    format: "json"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}"
+    fields:
+      - { label: "Date", name: "date", widget: "date" }
+      - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
+      - { label: "Notes", name: "notes", widget: "text", required: false }
 
   - name: "takeaways"
     label: "Key Takeaways"
-    files:
-      - label: "Key Takeaways"
-        name: "takeaways"
-        file: "meditation/data/takeaways.json"
-        format: "json"
-        fields:
-          - label: "Items"
-            name: "items"
-            widget: "list"
-            field: { label: "Takeaway", name: "item", widget: "string" }
+    file: "meditation/data/takeaways.json"
+    format: "json"
+    fields:
+      - label: "Items"
+        name: "items"
+        widget: "list"
+        field: { label: "Takeaway", name: "item", widget: "string" }
