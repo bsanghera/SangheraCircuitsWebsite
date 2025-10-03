@@ -17,40 +17,139 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background-color: #f5f1e8; color: #2c2416; line-height: 1.6; padding: 20px; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f1e8;
+      color: #2c2416;
+      line-height: 1.6;
+      padding: 20px;
+    }
+
     .container { max-width: 900px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 50px; padding-top: 30px; }
-    h1 { font-size: 2.5em; font-weight: 300; margin-bottom: 10px; color: #1a1510; }
-    .subtitle { font-size: 1.1em; color: #6b5d4f; font-weight: 300; }
-    .stats-card { background: #fff; border-radius: 12px; padding: 30px; margin-bottom: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 30px; }
+
+    header { text-align: center; margin-bottom: 40px; padding-top: 30px; }
+
+    h1 { font-size: 2.2em; font-weight: 300; margin-bottom: 8px; color: #1a1510; }
+
+    .subtitle { font-size: 1.05em; color: #6b5d4f; font-weight: 300; }
+
+    .stats-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;              /* slightly smaller */
+      margin-bottom: 28px;        /* slightly smaller */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;                  /* tighter */
+      margin-bottom: 18px;        /* tighter */
+    }
+
     .stat-item { text-align: center; }
-    .stat-number { font-size: 2.5em; font-weight: 300; color: #8b7355; }
-    .stat-label { font-size: 0.9em; color: #6b5d4f; text-transform: uppercase; letter-spacing: 1px; }
-    .takeaways { margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5dcc8; }
-    .takeaways h2 { font-size: 1.3em; font-weight: 400; margin-bottom: 20px; color: #1a1510; }
-    .takeaways-content { background: #faf8f3; padding: 20px 25px; border-radius: 8px; border-left: 3px solid #8b7355; }
+    .stat-number { font-size: 2.1em; font-weight: 300; color: #8b7355; }
+    .stat-label { font-size: 0.85em; color: #6b5d4f; text-transform: uppercase; letter-spacing: 1px; }
+
+    .takeaways { margin-top: 12px; padding-top: 18px; border-top: 1px solid #e5dcc8; }
+
+    /* NEW: header row for Key Findings + plus button */
+    .takeaways-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .takeaways h2 {
+      font-size: 1.2em;
+      font-weight: 500;
+      color: #1a1510;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid #e5dcc8;
+      background: transparent;
+      color: #2c2416;
+      text-decoration: none;
+      font-size: 1.2em;
+      line-height: 1;
+      cursor: pointer;
+      transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .icon-btn:hover {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      border-color: #d8cdb7;
+    }
+    .icon-btn:focus { outline: 2px solid #d8cdb7; outline-offset: 2px; }
+
+    .takeaways-content {
+      background: #faf8f3;
+      padding: 16px 20px;         /* slightly tighter */
+      border-radius: 8px;
+      border-left: 3px solid #8b7355;
+    }
+
     .takeaways-list { list-style: none; }
-    .takeaways-list li { margin-bottom: 12px; padding-left: 25px; position: relative; }
-    .takeaways-list li:before { content: "•"; position: absolute; left: 0; color: #8b7355; font-weight: bold; font-size: 1.3em; }
-    .add-session-btn { background: #8b7355; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1em; cursor: pointer; margin-bottom: 30px; transition: background 0.2s; }
-    .add-session-btn:hover { background: #6b5d4f; }
-    .sessions-list { margin-top: 30px; }
-    .session-card { background: #fff; border-radius: 10px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: box-shadow 0.2s; }
+    .takeaways-list li { margin-bottom: 10px; padding-left: 22px; position: relative; }
+    .takeaways-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #8b7355;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    /* Sessions: tighter spacing */
+    .sessions-list { margin-top: 18px; }           /* was 30px */
+    .session-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;                               /* was 25px */
+      margin-bottom: 10px;                         /* was 20px */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s;
+    }
     .session-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .session-date { font-weight: 500; color: #1a1510; font-size: 1.1em; }
-    .session-duration { background: #f0e9db; padding: 6px 14px; border-radius: 20px; font-size: 0.9em; color: #6b5d4f; }
-    .session-notes { color: #4a3f32; line-height: 1.7; white-space: pre-wrap; }
-    .empty-state { text-align: center; padding: 60px 20px; color: #8b7355; }
-    .empty-state p { font-size: 1.1em; margin-bottom: 20px; }
-    @media (max-width: 600px) { h1 { font-size: 2em; } .stats-grid { grid-template-columns: 1fr; } }
+
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;                          /* was 15px */
+    }
+    .session-date { font-weight: 500; color: #1a1510; font-size: 1.05em; }
+    .session-duration {
+      background: #f0e9db;
+      padding: 5px 12px;                           /* slightly smaller */
+      border-radius: 20px;
+      font-size: 0.9em;
+      color: #6b5d4f;
+    }
+    .session-notes { color: #4a3f32; line-height: 1.65; white-space: pre-wrap; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: #8b7355; }
+    .empty-state p { font-size: 1.05em; margin-bottom: 12px; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.8em; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
   </style>
 
   <!-- Load app JS from same origin (passes CSP) -->
   <script src="/meditation/app.js" defer></script>
-  <!-- (favicon 404 is harmless; add one later if you want) -->
 </head>
 <body>
   <div class="container">
@@ -76,16 +175,18 @@
       </div>
 
       <div class="takeaways">
-        <h2>Key Takeaways</h2>
+        <div class="takeaways-header">
+          <h2>Key Findings</h2>
+          <!-- NEW: tiny ghost "+" button aligned right -->
+          <a href="/meditation/admin" class="icon-btn" aria-label="Add meditation session" title="Add meditation session">+</a>
+        </div>
         <div class="takeaways-content">
           <ul class="takeaways-list" id="takeawaysList"></ul>
         </div>
       </div>
     </div>
 
-    <a href="/meditation/admin" class="add-session-btn" role="button">
-      + Add Meditation Session
-    </a>
+    <!-- Removed the big central Add Session button -->
 
     <div class="sessions-list" id="sessionsList">
       <div class="empty-state">
