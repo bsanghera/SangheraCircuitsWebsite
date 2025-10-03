@@ -1,51 +1,32 @@
-/* Admin boot: capture token (postMessage or hash), verify it, then init CMS inline */
+/* Boot & diagnostics: capture token, init CMS (inline config), then probe backend */
 
 const REPO = 'bsanghera/SangheraCircuitsWebsite';
 const WORKER_BASE = 'https://late-cell-3508.bsanghera27.workers.dev';
 
-// ---- 1) Capture token via postMessage (normal Decap flow)
+window.CMS_MANUAL_INIT = true;
+
+// ---- token capture (postMessage and hash fallback)
 window.addEventListener('message', (e) => {
   if (typeof e.data === 'string' && e.data.startsWith('authorization:github:success:')) {
     const token = e.data.split(':').pop();
     storeToken(token);
   }
 });
-
-// ---- 2) Capture token via URL hash (fallback)
-// e.g. /meditation/admin/#/token=<access_token>
 function readHashToken() {
   const h = location.hash || '';
   const m = h.match(/[#/]token=([^&]+)/);
   return m ? decodeURIComponent(m[1]) : null;
 }
-
 function storeToken(token) {
   if (!token) return;
   localStorage.setItem('decap-cms-auth', JSON.stringify({ token, provider: 'github' }));
   console.log('[admin] Stored GitHub token in localStorage');
-  // Clean hash
   try { history.replaceState(null, '', '#/collections/entries'); } catch {}
-  initFlow(); // continue
+  initFlow();
 }
 
-// ---- 3) Simple diagnostic: prove token is valid
-async function diagnoseToken(token) {
-  try {
-    const r = await fetch('https://api.github.com/user', {
-      headers: { Authorization: `token ${token}`, 'User-Agent': 'decap-debug' }
-    });
-    const txt = await r.text();
-    console.log('[diag] GET /user status=', r.status, 'body=', txt);
-  } catch (e) {
-    console.error('[diag] call to GitHub failed:', e);
-  }
-}
-
-// ---- 4) Manual init so we control startup timing
-window.CMS_MANUAL_INIT = true;
-
+// ---- inline config (to avoid config.yml fetch issues)
 function inlineConfig() {
-  // Same content as config.yml, but inline to avoid fetch/path issues
   return {
     backend: {
       name: 'github',
@@ -103,59 +84,94 @@ function inlineConfig() {
           }
         ]
       }
-    ]
+    ],
+    load_config_file: false
   };
 }
 
+// ---- init & probe
 function tryInitCMS() {
-  if (!window.CMS || !window.CMS.init) {
-    setTimeout(tryInitCMS, 100);
-    return;
-  }
+  if (!window.CMS || !window.CMS.init) return setTimeout(tryInitCMS, 100);
   if (window.__cmsInited) return;
   window.__cmsInited = true;
 
   console.log('[admin] Initializing Decap CMS (inline config, no file)…');
+  window.CMS.init({ config: inlineConfig() });
 
-  const cfg = inlineConfig();
-  // 🔒 important: do NOT load the on-disk config.yml — prevents duplicate collections
-  cfg.load_config_file = false;
+  // after core loads, run probes
+  setTimeout(runDiagnostics, 800);
+}
 
-  window.CMS.init({ config: cfg });
+async function runDiagnostics() {
+  try {
+    const backend = window.CMS && window.CMS.getBackend && window.CMS.getBackend();
+    if (!backend) {
+      console.warn('[diag] CMS backend not ready yet'); 
+      return setTimeout(runDiagnostics, 400);
+    }
 
-  setTimeout(() => {
+    // 1) Is Decap logged in?
+    const status = await backend.status();
+    console.log('[diag] backend.status() =>', status);
+
+    // 2) Try a simple GitHub API call with the same token (should be 200)
+    const raw = localStorage.getItem('decap-cms-auth');
+    const token = raw ? JSON.parse(raw).token : null;
+    if (token) {
+      const r = await fetch('https://api.github.com/repos/' + REPO, {
+        headers: { Authorization: `token ${token}`, 'User-Agent': 'decap-debug' }
+      });
+      console.log('[diag] GET /repos status=', r.status);
+      if (!r.ok) console.warn('[diag] /repos error body=', await r.text());
+    } else {
+      console.warn('[diag] no token in storage?');
+    }
+
+    // 3) Use Decap backend to list your content folder (this is what the UI does)
+    const entriesList = await backend.listFiles('meditation/data/entries');
+    console.log('[diag] listFiles(entries) count=', entriesList.length);
+
+    // 4) Read the index and takeaways via the backend
+    const idx = await backend.readFile('meditation/data/entries/index.json');
+    console.log('[diag] readFile(index.json) len=', idx && idx.data ? idx.data.length : 0);
+
+    const tk = await backend.readFile('meditation/data/takeaways.json');
+    console.log('[diag] readFile(takeaways.json) len=', tk && tk.data ? tk.data.length : 0);
+
+    // If we got here without errors, push to entries collection route (in case router stuck)
     if (location.hash === '#/' || location.hash === '#') {
       location.hash = '#/collections/entries';
     }
-  }, 600);
+  } catch (err) {
+    console.error('[diag] threw error:', err);
+  }
 }
 
+// ---- flow
 function initFlow() {
   tryInitCMS();
-
-  // Optional: log token + basic GitHub call
+  // also log current user (direct GitHub)
   try {
     const stored = localStorage.getItem('decap-cms-auth');
     if (stored) {
       const { token } = JSON.parse(stored);
-      if (token) diagnoseToken(token);
+      if (token) {
+        fetch('https://api.github.com/user', { headers: { Authorization: `token ${token}` } })
+          .then(r => r.text())
+          .then(t => console.log('[diag] /user again ->', t.slice(0, 120) + '…'))
+          .catch(e => console.error('[diag] /user failed', e));
+      }
     }
   } catch {}
 }
 
-// ---- 5) First-load logic
 document.addEventListener('DOMContentLoaded', () => {
-  // If token already present, proceed
-  try {
-    const existing = localStorage.getItem('decap-cms-auth');
-    if (existing) {
-      console.log('[admin] Found existing token, booting CMS');
-      initFlow();
-      return;
-    }
-  } catch {}
-
-  // Try URL-hash token, then fall back to showing the login button
+  const existing = localStorage.getItem('decap-cms-auth');
+  if (existing) {
+    console.log('[admin] Found existing token, booting CMS');
+    initFlow();
+    return;
+  }
   const hashTok = readHashToken();
   if (hashTok) storeToken(hashTok);
   else initFlow();
