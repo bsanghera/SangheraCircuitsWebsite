@@ -22,6 +22,28 @@ const els = {
   tabs: document.querySelectorAll('.tab'),
   tabpanels: document.querySelectorAll('.tabpanel'),
 };
+/* --- Listen for token from the OAuth popup (Worker posts this) --- */
+window.addEventListener('message', (e) => {
+  // String format: "authorization:github:success:<token>"
+  if (typeof e.data === 'string' && e.data.startsWith('authorization:github:success:')) {
+    const token = e.data.split(':').pop();
+    if (token) {
+      localStorage.setItem('gh_token', token);
+      afterLogin(); // proceed to load UI
+    }
+  }
+  // Object formats (belt & suspenders, in case Worker sends object)
+  if (e.data && typeof e.data === 'object') {
+    if (e.data.token) {
+      localStorage.setItem('gh_token', e.data.token);
+      afterLogin();
+    }
+    if (e.data.type === 'authorization:github' && e.data.status === 'success' && e.data.token) {
+      localStorage.setItem('gh_token', e.data.token);
+      afterLogin();
+    }
+  }
+});
 
 function toast(msg) {
   els.toast.textContent = msg; els.toast.hidden = false;
