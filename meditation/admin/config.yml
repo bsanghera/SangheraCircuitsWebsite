@@ -9,6 +9,7 @@ media_folder: "meditation/uploads"
 public_folder: "/meditation/uploads"
 
 collections:
+  # One JSON file per entry
   - name: "entries"
     label: "Meditation Entries"
     folder: "meditation/data/entries"
@@ -21,6 +22,7 @@ collections:
       - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
       - { label: "Notes", name: "notes", widget: "text", required: false }
 
+  # Key takeaways live in a single JSON file as { "items": [...] }
   - name: "takeaways"
     label: "Key Takeaways"
     file: "meditation/data/takeaways.json"
@@ -31,7 +33,8 @@ collections:
         widget: "list"
         field: { label: "Takeaway", name: "item", widget: "string" }
 
-  - name: "index"
+  # Simple index of entry filenames for the public page to fetch
+  - name: "entries_index"
     label: "Entries Index"
     file: "meditation/data/entries/index.json"
     format: "json"
@@ -39,4 +42,4 @@ collections:
       - label: "Files"
         name: "files"
         widget: "list"
-        field: { label: "Filename", name: "file", widget: "string" }
+        field: { label: "Filename (e.g., 2025-10-03.json)", name: "file", widget: "string" }
