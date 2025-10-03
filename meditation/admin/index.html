@@ -6,7 +6,10 @@
   <title>Meditation Admin</title>
 </head>
 <body>
-  <!-- Decap handles OAuth + UI; no custom JS needed -->
+  <!-- This boot script captures the OAuth popup message and stores the token for Decap -->
+  <script src="/meditation/admin/boot.js"></script>
+
+  <!-- Load Decap CMS (the admin UI) -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
