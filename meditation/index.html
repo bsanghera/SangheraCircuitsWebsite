@@ -17,40 +17,223 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background-color: #f5f1e8; color: #2c2416; line-height: 1.6; padding: 20px; }
-    .container { max-width: 900px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 50px; padding-top: 30px; }
-    h1 { font-size: 2.5em; font-weight: 300; margin-bottom: 10px; color: #1a1510; }
-    .subtitle { font-size: 1.1em; color: #6b5d4f; font-weight: 300; }
-    .stats-card { background: #fff; border-radius: 12px; padding: 30px; margin-bottom: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin-bottom: 30px; }
-    .stat-item { text-align: center; }
-    .stat-number { font-size: 2.5em; font-weight: 300; color: #8b7355; }
-    .stat-label { font-size: 0.9em; color: #6b5d4f; text-transform: uppercase; letter-spacing: 1px; }
-    .takeaways { margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5dcc8; }
-    .takeaways h2 { font-size: 1.3em; font-weight: 400; margin-bottom: 20px; color: #1a1510; }
-    .takeaways-content { background: #faf8f3; padding: 20px 25px; border-radius: 8px; border-left: 3px solid #8b7355; }
-    .takeaways-list { list-style: none; }
-    .takeaways-list li { margin-bottom: 12px; padding-left: 25px; position: relative; }
-    .takeaways-list li:before { content: "•"; position: absolute; left: 0; color: #8b7355; font-weight: bold; font-size: 1.3em; }
-    .add-session-btn { background: #8b7355; color: white; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1em; cursor: pointer; margin-bottom: 30px; transition: background 0.2s; }
-    .add-session-btn:hover { background: #6b5d4f; }
-    .sessions-list { margin-top: 30px; }
-    .session-card { background: #fff; border-radius: 10px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: box-shadow 0.2s; }
-    .session-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .session-date { font-weight: 500; color: #1a1510; font-size: 1.1em; }
-    .session-duration { background: #f0e9db; padding: 6px 14px; border-radius: 20px; font-size: 0.9em; color: #6b5d4f; }
-    .session-notes { color: #4a3f32; line-height: 1.7; white-space: pre-wrap; }
-    .empty-state { text-align: center; padding: 60px 20px; color: #8b7355; }
-    .empty-state p { font-size: 1.1em; margin-bottom: 20px; }
-    @media (max-width: 600px) { h1 { font-size: 2em; } .stats-grid { grid-template-columns: 1fr; } }
+    
+    body { 
+      font-family: 'ABC Favorit', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(to bottom, #F4EFE6 0%, #FDFBF7 100%);
+      color: #1F1F1F; 
+      line-height: 1.6; 
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .container { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+    }
+    
+    header { 
+      text-align: center; 
+      margin-bottom: 60px; 
+      padding-top: 60px; 
+    }
+    
+    h1 { 
+      font-size: 4rem; 
+      font-weight: 400; 
+      margin-bottom: 16px; 
+      color: #191918;
+      letter-spacing: -0.03em;
+    }
+    
+    .subtitle { 
+      font-size: 1.375rem; 
+      color: #646464; 
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    
+    .stats-card { 
+      background: #FFFFFF; 
+      border-radius: 24px; 
+      padding: 48px; 
+      margin-bottom: 48px; 
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    
+    .stats-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+      gap: 40px; 
+      margin-bottom: 48px; 
+    }
+    
+    .stat-item { 
+      text-align: center; 
+    }
+    
+    .stat-number { 
+      font-size: 3.5rem; 
+      font-weight: 400; 
+      color: #CC9B6D;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    
+    .stat-label { 
+      font-size: 0.9375rem; 
+      color: #646464; 
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+    
+    .takeaways { 
+      margin-top: 48px; 
+      padding-top: 48px; 
+      border-top: 1px solid #E8E3D8; 
+    }
+    
+    .takeaways h2 { 
+      font-size: 1.5rem; 
+      font-weight: 400; 
+      margin-bottom: 24px; 
+      color: #191918;
+      letter-spacing: -0.02em;
+    }
+    
+    .takeaways-content { 
+      background: linear-gradient(135deg, #FDFBF7 0%, #FAF7F0 100%);
+      padding: 32px; 
+      border-radius: 16px; 
+      border: 1px solid #E8E3D8;
+    }
+    
+    .takeaways-list { 
+      list-style: none; 
+    }
+    
+    .takeaways-list li { 
+      margin-bottom: 16px; 
+      padding-left: 32px; 
+      position: relative;
+      color: #2E2E2E;
+      font-size: 1.0625rem;
+      line-height: 1.7;
+    }
+    
+    .takeaways-list li:before { 
+      content: "•"; 
+      position: absolute; 
+      left: 0; 
+      color: #CC9B6D; 
+      font-weight: 400; 
+      font-size: 1.5em;
+      line-height: 1;
+    }
+    
+    .add-session-btn { 
+      background: #191918;
+      color: #FFFFFF; 
+      border: none; 
+      padding: 16px 32px; 
+      border-radius: 12px; 
+      font-size: 1.0625rem; 
+      cursor: pointer; 
+      margin-bottom: 48px; 
+      transition: all 0.2s ease;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      display: inline-block;
+      text-decoration: none;
+    }
+    
+    .add-session-btn:hover { 
+      background: #2E2E2E;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .sessions-list { 
+      margin-top: 48px; 
+    }
+    
+    .session-card { 
+      background: #FFFFFF; 
+      border-radius: 20px; 
+      padding: 36px; 
+      margin-bottom: 24px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: all 0.2s ease;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    
+    .session-card:hover { 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    
+    .session-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 20px; 
+    }
+    
+    .session-date { 
+      font-weight: 400; 
+      color: #191918; 
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+    
+    .session-duration { 
+      background: linear-gradient(135deg, #F4EFE6 0%, #E8E3D8 100%);
+      padding: 8px 18px; 
+      border-radius: 24px; 
+      font-size: 0.9375rem; 
+      color: #646464;
+      font-weight: 400;
+      border: 1px solid #E8E3D8;
+    }
+    
+    .session-notes { 
+      color: #2E2E2E; 
+      line-height: 1.8; 
+      white-space: pre-wrap;
+      font-size: 1.0625rem;
+    }
+    
+    .empty-state { 
+      text-align: center; 
+      padding: 80px 20px; 
+      color: #646464; 
+    }
+    
+    .empty-state p { 
+      font-size: 1.25rem; 
+      margin-bottom: 16px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    
+    .empty-state p:last-child {
+      font-size: 1.0625rem;
+      color: #8C8C8C;
+    }
+    
+    @media (max-width: 768px) { 
+      h1 { font-size: 2.5rem; } 
+      .subtitle { font-size: 1.125rem; }
+      .stats-grid { grid-template-columns: 1fr; gap: 32px; }
+      .stats-card { padding: 32px 24px; }
+      .session-card { padding: 24px; }
+      header { padding-top: 40px; }
+    }
   </style>
 
   <!-- Load app JS from same origin (passes CSP) -->
   <script src="/meditation/app.js" defer></script>
-  <!-- (favicon 404 is harmless; add one later if you want) -->
 </head>
 <body>
   <div class="container">
@@ -90,7 +273,7 @@
     <div class="sessions-list" id="sessionsList">
       <div class="empty-state">
         <p>No sessions yet</p>
-        <p style="font-size: 0.9em;">Add your first session in the admin</p>
+        <p>Add your first session in the admin</p>
       </div>
     </div>
   </div>
