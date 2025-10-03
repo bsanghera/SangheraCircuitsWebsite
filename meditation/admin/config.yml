@@ -17,12 +17,15 @@ collections:
     extension: json
     format: json
     slug: "{{year}}-{{month}}-{{day}}"
+    # 👇 tell Decap how to label items in the UI (no title field needed)
+    identifier_field: date
+    summary: "{{date | date('MMM D, YYYY')}} — {{duration}} min"
     fields:
       - { label: Date, name: date, widget: date }
       - { label: "Duration (min)", name: duration, widget: number, value_type: int, min: 1 }
       - { label: Notes, name: notes, widget: text, required: false }
 
-  # 2) Files-based collection: single JSON file for takeaways
+  # 2) Single file for key takeaways
   - name: takeaways
     label: Key Takeaways
     files:
@@ -38,7 +41,7 @@ collections:
               name: item
               widget: string
 
-  # 3) Files-based collection: single JSON file listing entry filenames
+  # 3) Single file index of entry filenames
   - name: entries_index
     label: Entries Index
     files:
