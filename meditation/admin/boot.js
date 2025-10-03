@@ -115,10 +115,14 @@ function tryInitCMS() {
   if (window.__cmsInited) return;
   window.__cmsInited = true;
 
-  console.log('[admin] Initializing Decap CMS (inline config)…');
-  window.CMS.init({ config: inlineConfig() });
+  console.log('[admin] Initializing Decap CMS (inline config, no file)…');
 
-  // Nudge router if it sits on #/
+  const cfg = inlineConfig();
+  // 🔒 important: do NOT load the on-disk config.yml — prevents duplicate collections
+  cfg.load_config_file = false;
+
+  window.CMS.init({ config: cfg });
+
   setTimeout(() => {
     if (location.hash === '#/' || location.hash === '#') {
       location.hash = '#/collections/entries';
