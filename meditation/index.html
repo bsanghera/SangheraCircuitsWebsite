@@ -115,11 +115,10 @@
 
     async function loadEntries() {
       try {
-        // Load the directory index created by GitHub Pages (needs a helper JSON list)
         const res = await fetch("/meditation/data/entries/index.json?nocache=" + Date.now());
         if (!res.ok) throw new Error("No index.json found in entries folder");
-        const files = await res.json();
-
+        const files = await res.json(); // already an array of strings
+    
         const entries = [];
         for (const file of files) {
           try {
@@ -135,6 +134,7 @@
         return [];
       }
     }
+
 
     async function init() {
       const takeaways = await loadJSON("/meditation/data/takeaways.json").then(d => d.items || []);
