@@ -1,99 +1,49 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Meditation Admin</title>
 </head>
 <body>
+  <div id="loading">Loading admin...</div>
+
   <script>
-    // Tell Decap not to auto-init; we will init once we have a token.
-    window.CMS_MANUAL_INIT = true;
+    // Guard to ensure CMS loads only once
+    let cmsLoaded = false;
 
-    // --- tiny logger ---
-    const log = (...a) => { try { console.log(...a); } catch(_){} };
+    function initCMS() {
+      if (cmsLoaded) return;
+      cmsLoaded = true;
 
-    // --- load Decap exactly once ---
-    let cmsLoadPromise = null;
-    function loadCMSOnce() {
-      if (window.CMS) return Promise.resolve();
-      if (cmsLoadPromise) return cmsLoadPromise;
-      cmsLoadPromise = new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = "https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js";
-        s.onload = () => { log('[admin] Decap loaded'); resolve(); };
-        s.onerror = (e) => reject(new Error('Failed to load Decap CMS'));
-        document.body.appendChild(s);
-      });
-      return cmsLoadPromise;
+      // Dynamically load Decap only after auth
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
+      document.body.appendChild(script);
+
+      script.onload = () => {
+        console.log("[admin] Decap CMS loaded");
+        document.getElementById('loading').style.display = 'none';
+      };
     }
 
-    // --- init Decap exactly once ---
-    let inited = false;
-    async function initCMSOnce() {
-      if (inited) { log('[admin] CMS already inited, skipping'); return; }
-      await loadCMSOnce();
-      if (inited) return; // double-guard in case of races
-      if (window.CMS && typeof window.CMS.init === 'function') {
-        inited = true;
-        log('[admin] Initializing Decap…');
-        window.CMS.init();
-      } else {
-        log('[admin] CMS object not ready');
-      }
+    // If we already have a token stored, initialize immediately
+    if (localStorage.getItem("decap-cms-auth")) {
+      console.log("[admin] Found existing token, starting CMS");
+      initCMS();
     }
 
-    function setToken(token) {
-      if (!token) return;
-      try {
-        localStorage.setItem('decap-cms-oauth-token', token);
-        localStorage.setItem('netlify-cms-oauth-token', token); // legacy key
-        log('[admin] Token stored');
-      } catch (e) {
-        console.warn('[admin] Could not store token', e);
+    // Otherwise, wait for GitHub OAuth popup to send us the token
+    window.addEventListener("message", (e) => {
+      if (e.data?.token && e.data?.status === "success") {
+        console.log("[admin] Received token via postMessage", e.data);
+        localStorage.setItem("decap-cms-auth", JSON.stringify({
+          token: e.data.token,
+          provider: "github"
+        }));
+        initCMS();
       }
-    }
-
-    // 1) Hash fallback (Worker may have set #access_token=...)
-    (function fromHash(){
-      const m = location.hash && location.hash.match(/access_token=([^&]+)/);
-      if (m) {
-        const t = decodeURIComponent(m[1]);
-        log('[admin] Found token in hash');
-        setToken(t);
-        try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
-      }
-    })();
-
-    // 2) Listen for token from popup (multiple formats)
-    window.addEventListener('message', (e) => {
-      const d = e.data; let token = null;
-      if (typeof d === 'string') {
-        const m = d.match(/^authorization:github:success:([^]+)$/);
-        if (m) token = m[1];
-      }
-      if (!token && d && typeof d === 'object') {
-        if (d.token) token = d.token;
-        if (!token && d.type === 'authorization:github' && d.status === 'success' && d.token) token = d.token;
-      }
-      if (token) {
-        log('[admin] Received token via postMessage');
-        setToken(token);
-        initCMSOnce();   // init without reloading
-      }
-    }, false);
-
-    // 3) If a token already exists (previous login), init immediately
-    (function boot(){
-      const t = localStorage.getItem('decap-cms-oauth-token')
-            || localStorage.getItem('netlify-cms-oauth-token');
-      if (t) {
-        log('[admin] Token already present, starting CMS');
-        initCMSOnce();
-      } else {
-        log('[admin] No token yet, waiting for login…');
-      }
-    })();
+    });
   </script>
 </body>
 </html>
