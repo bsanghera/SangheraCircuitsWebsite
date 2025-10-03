@@ -5,42 +5,47 @@ backend:
   base_url: https://late-cell-3508.bsanghera27.workers.dev
   auth_endpoint: /auth
 
-
 media_folder: "meditation/uploads"
 public_folder: "/meditation/uploads"
 
 collections:
-  # One JSON file per entry
+  # 1) One JSON file per entry in a folder
   - name: "entries"
     label: "Meditation Entries"
     folder: "meditation/data/entries"
+    create: true
     extension: "json"
     format: "json"
-    create: true
     slug: "{{year}}-{{month}}-{{day}}"
     fields:
       - { label: "Date", name: "date", widget: "date" }
       - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
       - { label: "Notes", name: "notes", widget: "text", required: false }
 
-  # Key takeaways live in a single JSON file as { "items": [...] }
+  # 2) Single file for key takeaways (files collection with one file)
   - name: "takeaways"
     label: "Key Takeaways"
-    file: "meditation/data/takeaways.json"
-    format: "json"
-    fields:
-      - label: "Items"
-        name: "items"
-        widget: "list"
-        field: { label: "Takeaway", name: "item", widget: "string" }
+    files:
+      - label: "Takeaways"
+        name: "takeaways"
+        file: "meditation/data/takeaways.json"
+        format: "json"
+        fields:
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            field: { label: "Takeaway", name: "item", widget: "string" }
 
-  # Simple index of entry filenames for the public page to fetch
+  # 3) Single file index of entry filenames
   - name: "entries_index"
     label: "Entries Index"
-    file: "meditation/data/entries/index.json"
-    format: "json"
-    fields:
-      - label: "Files"
-        name: "files"
-        widget: "list"
-        field: { label: "Filename (e.g., 2025-10-03.json)", name: "file", widget: "string" }
+    files:
+      - label: "Index"
+        name: "index"
+        file: "meditation/data/entries/index.json"
+        format: "json"
+        fields:
+          - label: "Files"
+            name: "files"
+            widget: "list"
+            field: { label: "Filename (YYYY-MM-DD.json)", name: "file", widget: "string" }
