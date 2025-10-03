@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Meditation Journal</title>
 
-  <!-- CSP: allow only same-origin scripts. (No inline JS.) -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  script-src 'self';
@@ -37,16 +36,16 @@
     .stats-card {
       background: #fff;
       border-radius: 12px;
-      padding: 24px;              /* slightly smaller */
-      margin-bottom: 28px;        /* slightly smaller */
+      padding: 24px;
+      margin-bottom: 28px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 16px;                  /* tighter */
-      margin-bottom: 18px;        /* tighter */
+      gap: 16px;
+      margin-bottom: 18px;
     }
 
     .stat-item { text-align: center; }
@@ -54,90 +53,55 @@
     .stat-label { font-size: 0.85em; color: #6b5d4f; text-transform: uppercase; letter-spacing: 1px; }
 
     .takeaways { margin-top: 12px; padding-top: 18px; border-top: 1px solid #e5dcc8; }
-
-    /* NEW: header row for Key Findings + plus button */
-    .takeaways-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .takeaways h2 {
-      font-size: 1.2em;
-      font-weight: 500;
-      color: #1a1510;
-    }
+    .takeaways-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .takeaways h2 { font-size: 1.2em; font-weight: 500; color: #1a1510; }
 
     .icon-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      border: 1px solid #e5dcc8;
-      background: transparent;
-      color: #2c2416;
-      text-decoration: none;
-      font-size: 1.2em;
-      line-height: 1;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 999px;
+      border: 1px solid #e5dcc8; background: transparent; color: #2c2416;
+      text-decoration: none; font-size: 1.2em; line-height: 1; cursor: pointer;
       transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
     }
-    .icon-btn:hover {
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      border-color: #d8cdb7;
-    }
+    .icon-btn:hover { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-color: #d8cdb7; }
     .icon-btn:focus { outline: 2px solid #d8cdb7; outline-offset: 2px; }
 
     .takeaways-content {
       background: #faf8f3;
-      padding: 16px 20px;         /* slightly tighter */
+      padding: 16px 20px;
       border-radius: 8px;
       border-left: 3px solid #8b7355;
     }
-
     .takeaways-list { list-style: none; }
-    .takeaways-list li { margin-bottom: 10px; padding-left: 22px; position: relative; }
+    /* +1pt (≈ +1px) on bullets */
+    .takeaways-list li { margin-bottom: 10px; padding-left: 22px; position: relative; font-size: 1.06em; }
     .takeaways-list li:before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: #8b7355;
-      font-weight: bold;
-      font-size: 1.1em;
+      content: "•"; position: absolute; left: 0; color: #8b7355; font-weight: bold; font-size: 1.1em;
     }
 
-    /* Sessions: tighter spacing */
-    .sessions-list { margin-top: 18px; }           /* was 30px */
+    .sessions-list { margin-top: 18px; }
     .session-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 18px;                               /* was 25px */
-      margin-bottom: 10px;                         /* was 20px */
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: box-shadow 0.2s;
+      background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: box-shadow 0.2s;
     }
     .session-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
 
-    .session-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;                          /* was 15px */
+    /* New layout: body first (emphasis), meta row second */
+    .session-notes {
+      color: #2c2416;
+      line-height: 1.7;
+      font-size: 1.05em;      /* slightly larger for focus */
+      white-space: pre-wrap;
+      margin-bottom: 8px;
     }
-    .session-date { font-weight: 500; color: #1a1510; font-size: 1.05em; }
+    .session-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; color: #6b5d4f; font-size: 0.92em;
+    }
     .session-duration {
-      background: #f0e9db;
-      padding: 5px 12px;                           /* slightly smaller */
-      border-radius: 20px;
-      font-size: 0.9em;
-      color: #6b5d4f;
+      background: #f0e9db; padding: 5px 12px; border-radius: 20px; font-size: 0.9em; color: #6b5d4f;
     }
-    .session-notes { color: #4a3f32; line-height: 1.65; white-space: pre-wrap; }
+    .session-date { color: #7b6e60; font-size: 0.9em; } /* de-emphasized */
 
     .empty-state { text-align: center; padding: 40px 20px; color: #8b7355; }
     .empty-state p { font-size: 1.05em; margin-bottom: 12px; }
@@ -145,10 +109,10 @@
     @media (max-width: 600px) {
       h1 { font-size: 1.8em; }
       .stats-grid { grid-template-columns: 1fr; }
+      .session-meta { flex-wrap: wrap; gap: 6px; }
     }
   </style>
 
-  <!-- Load app JS from same origin (passes CSP) -->
   <script src="/meditation/app.js" defer></script>
 </head>
 <body>
@@ -177,7 +141,7 @@
       <div class="takeaways">
         <div class="takeaways-header">
           <h2>Key Findings</h2>
-          <!-- NEW: tiny ghost "+" button aligned right -->
+          <!-- tiny ghost "+" button aligned right -->
           <a href="/meditation/admin" class="icon-btn" aria-label="Add meditation session" title="Add meditation session">+</a>
         </div>
         <div class="takeaways-content">
@@ -185,8 +149,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Removed the big central Add Session button -->
 
     <div class="sessions-list" id="sessionsList">
       <div class="empty-state">
