@@ -30,3 +30,25 @@ a { color: var(--accent); text-decoration: none; }
 .item .meta { color: var(--muted); font-size:.9rem; }
 .toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%); background:#1a1510; color:#fff; padding:10px 14px; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.2);}
 .muted { color: var(--muted); font-size:.9rem; }
+/* Make topbar a positioning context for the centered link */
+.topbar { position: sticky; top: 0; z-index: 10; position: sticky; /* already present */ }
+.topbar { position: sticky; } /* keep; but ensure it's also positioned */
+.topbar { position: sticky; } /* (no change needed if already there) */
+
+/* NEW: centered link style */
+.center-link{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.15rem;      /* bigger text */
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: .2px;
+}
+.center-link:hover { text-decoration: underline; }
+
+/* On very small screens, let it wrap nicely */
+@media (max-width: 520px){
+  .center-link{ font-size: 1rem; }
+}
