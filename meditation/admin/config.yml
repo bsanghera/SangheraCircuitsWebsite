@@ -1,13 +1,42 @@
+backend:
+  name: github
+  repo: bsanghera/SangheraCircuitsWebsite
+  branch: main
+  base_url: https://late-cell-3508.bsanghera27.workers.dev
+  auth_endpoint: /auth
+
+media_folder: "meditation/uploads"
+public_folder: "/meditation/uploads"
+
 collections:
   - name: "entries"
     label: "Meditation Entries"
-    file: "meditation/data/entries.json"
+    folder: "meditation/data/entries"
+    extension: "json"
+    format: "json"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}"
+    fields:
+      - { label: "Date", name: "date", widget: "date" }
+      - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
+      - { label: "Notes", name: "notes", widget: "text", required: false }
+
+  - name: "takeaways"
+    label: "Key Takeaways"
+    file: "meditation/data/takeaways.json"
     format: "json"
     fields:
-      - label: "Entries"
-        name: "entries"
+      - label: "Items"
+        name: "items"
         widget: "list"
-        fields:
-          - { label: "Date", name: "date", widget: "date" }
-          - { label: "Duration (min)", name: "duration", widget: "number", value_type: "int", min: 1 }
-          - { label: "Notes", name: "notes", widget: "text", required: false }
+        field: { label: "Takeaway", name: "item", widget: "string" }
+
+  - name: "index"
+    label: "Entries Index"
+    file: "meditation/data/entries/index.json"
+    format: "json"
+    fields:
+      - label: "Files"
+        name: "files"
+        widget: "list"
+        field: { label: "Filename", name: "file", widget: "string" }
