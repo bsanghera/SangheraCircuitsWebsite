@@ -11,7 +11,14 @@
 <body>
   <header class="topbar">
     <div class="brand">Meditation Admin</div>
+  
+    <!-- NEW centered link back to the public journal -->
+    <a href="/meditation/" class="center-link" title="Go to Meditation Journal">
+      Meditation Journal
+    </a>
+  
     <div class="spacer"></div>
+    <button id="themeToggle" class="btn btn-ghost" title="Toggle theme (d)">Theme</button>
     <button id="loginBtn" class="btn">Login with GitHub</button>
     <div id="userBadge" class="user-badge" hidden>
       <img id="userAvatar" alt="">
@@ -19,6 +26,7 @@
       <button id="logoutBtn" class="btn btn-ghost">Logout</button>
     </div>
   </header>
+
 
   <main class="container">
     <nav class="tabs">
