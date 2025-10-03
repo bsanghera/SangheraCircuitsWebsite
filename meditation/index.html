@@ -9,7 +9,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f5f1e8; /* gentle cream */
+      background-color: #f5f1e8;
       color: #2c2416;
       line-height: 1.6;
       padding: 20px;
@@ -113,21 +113,37 @@
       return r.json();
     }
 
-    // If you were hosting as a project site (username.github.io/repo), switch to "data/..." instead of "/meditation/data/..."
-    Promise.all([
-      loadJSON("/meditation/data/entries.json"),
-      loadJSON("/meditation/data/takeaways.json")
-    ]).then(([E, T]) => {
-      const sessions = (E && Array.isArray(E.entries)) ? E.entries : [];
-      const takeaways = (T && Array.isArray(T.items)) ? T.items : [];
+    async function loadEntries() {
+      try {
+        // Load the directory index created by GitHub Pages (needs a helper JSON list)
+        const res = await fetch("/meditation/data/entries/index.json?nocache=" + Date.now());
+        if (!res.ok) throw new Error("No index.json found in entries folder");
+        const files = await res.json();
+
+        const entries = [];
+        for (const file of files) {
+          try {
+            const data = await loadJSON("/meditation/data/entries/" + file);
+            entries.push(data);
+          } catch (e) {
+            console.error("Failed to load", file, e);
+          }
+        }
+        return entries;
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
+    }
+
+    async function init() {
+      const takeaways = await loadJSON("/meditation/data/takeaways.json").then(d => d.items || []);
       fillTakeaways(takeaways);
+
+      const sessions = await loadEntries();
       renderSessions(sessions);
       updateStats(sessions);
-    }).catch(err => {
-      console.error(err);
-      document.getElementById('sessionsList').innerHTML =
-        '<div class="empty-state"><p>Could not load entries.</p></div>';
-    });
+    }
 
     function fillTakeaways(items){
       const ul = document.getElementById('takeawaysList');
@@ -176,6 +192,8 @@
       document.getElementById('totalSessions').textContent = sessions.length;
       document.getElementById('totalMinutes').textContent = totalMinutes;
     }
+
+    init();
   </script>
 </body>
 </html>
