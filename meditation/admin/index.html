@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Meditation Admin</title>
+  <link rel="stylesheet" href="/meditation/admin/styles.css">
+  <script>window.ADMIN_REPO = "bsanghera/SangheraCircuitsWebsite";</script>
+  <script>window.OAUTH_BASE = "https://late-cell-3508.bsanghera27.workers.dev";</script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Meditation Admin</div>
+  
+    <!-- NEW centered link back to the public journal -->
+    <a href="/meditation/" class="center-link" title="Go to Meditation Journal">
+      Meditation Journal
+    </a>
+  
+    <div class="spacer"></div>
+    <button id="themeToggle" class="btn btn-ghost" title="Toggle theme (d)">Theme</button>
+    <button id="loginBtn" class="btn">Login with GitHub</button>
+    <div id="userBadge" class="user-badge" hidden>
+      <img id="userAvatar" alt="">
+      <span id="userName"></span>
+      <button id="logoutBtn" class="btn btn-ghost">Logout</button>
+    </div>
+  </header>
+
+
+  <main class="container">
+    <nav class="tabs">
+      <button class="tab active" data-tab="entries">Entries</button>
+      <button class="tab" data-tab="takeaways">Takeaways</button>
+    </nav>
+
+    <section id="tab-entries" class="tabpanel active">
+      <div class="panel">
+        <h2>New Entry</h2>
+        <form id="entryForm" class="form">
+          <label>
+            <span>Date</span>
+            <input type="date" id="entryDate" required>
+          </label>
+          <label>
+            <span>Duration (min)</span>
+            <input type="number" min="1" id="entryDuration" required>
+          </label>
+          <label>
+            <span>Notes</span>
+            <textarea id="entryNotes" rows="6" placeholder="Reflections..."></textarea>
+          </label>
+          <div class="actions">
+            <button class="btn" type="submit">Save Entry</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Existing Entries</h2>
+        <div id="entriesList" class="list">Loading…</div>
+      </div>
+    </section>
+
+    <section id="tab-takeaways" class="tabpanel">
+      <div class="panel">
+        <h2>Key Takeaways</h2>
+        <p class="muted">One per line.</p>
+        <textarea id="takeawaysText" rows="10" style="width:100%"></textarea>
+        <div class="actions">
+          <button id="saveTakeawaysBtn" class="btn">Save Takeaways</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="/meditation/admin/simple-admin.js" defer></script>
+</body>
+</html>
