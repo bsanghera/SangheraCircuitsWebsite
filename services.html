@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="Engineering Services - Sanghera Systems" />
+  <meta name="description" content="Technical Capabilities - Sanghera Systems" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SERVICES | SANGHERA SYSTEMS</title>
+  <title>EXPERTISE | SANGHERA SYSTEMS</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="css/style.css" />
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K8DCBQ6C17"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K8DCBQ6C17');
+  </script>
 </head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K8DCBQ6C17"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-K8DCBQ6C17');
-</script>
 <body>
 
   <header>
@@ -28,8 +29,8 @@
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="services.html" class="active">Services</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="expertise.html" class="active">Expertise</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
@@ -37,57 +38,107 @@
 
   <main>
     <section class="container" style="padding: 120px 20px 60px 20px;">
-      <h2 style="font-size: 4rem; line-height: 1; margin-bottom: 20px;">TECHNICAL<br><span style="color: var(--primary);">CAPABILITIES</span></h2>
-      <p style="font-family: var(--font-code); color: var(--text-muted); max-width: 600px;">
-        // We provide full-cycle hardware development. From napkin sketches to mass production files.
+      <h2 style="font-size: 4rem; line-height: 0.9; margin-bottom: 20px;">
+        TECHNICAL<br><span style="color: var(--primary);">CAPABILITIES</span>
+      </h2>
+      <p style="font-family: var(--font-code); color: var(--text-muted); max-width: 700px;">
+        // Comprehensive hardware engineering solutions. From mixed-signal architectures to high-density interconnects.
       </p>
     </section>
 
-    <section class="container services-section">
+    <section class="container services-section" style="padding-top: 0;">
       <div class="grid">
+        
         <div class="card">
-          <h4>01. HARDWARE DESIGN</h4>
-          <p>Schematic capture and component selection focusing on supply chain availability and cost-optimization. We design architectures that scale.</p>
+          <h4 style="color: var(--primary);">01. SYSTEM ARCHITECTURE</h4>
+          <h5 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 15px; color: var(--text-main);">End-to-End Hardware Development</h5>
+          <p>
+            We engineer complex hardware ecosystems from architectural concept to mass production. Our team develops high-precision data acquisition units, robust power distribution networks, and custom automated test equipment (ATE) designed for manufacturing scalability.
+          </p>
         </div>
+
         <div class="card">
-          <h4>02. PCB LAYOUT</h4>
-          <p>High-density interconnect (HDI), impedance control, and stack-up planning. We specialize in reducing EMI and ensuring first-pass success.</p>
+          <h4 style="color: var(--primary);">02. ANALOG & MIXED-SIGNAL DESIGN</h4>
+          <h5 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 15px; color: var(--text-main);">Low-Noise & High Precision</h5>
+          <p>
+             We specialize in high-fidelity analog front-ends and low-noise signal chains. Our expertise covers precision ADC/DAC integration and the development of stable current and voltage drivers required for sensitive instrumentation.
+          </p>
         </div>
+
         <div class="card">
-          <h4>03. EMBEDDED SYSTEMS</h4>
-          <p>Firmware development for bare-metal and RTOS environments. We bridge the gap between hardware and software with efficient, documented code.</p>
+          <h4 style="color: var(--primary);">03. FPGA & LOGIC</h4>
+          <h5 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 15px; color: var(--text-main);">RTL Design & Synthesis</h5>
+          <p>
+            We architect high-performance digital logic and FPGA systems. Using Verilog RTL, we design custom data acquisition pipelines and deterministic digital control loops optimized for real-time processing.
+          </p>
         </div>
+
         <div class="card">
-          <h4>04. VALIDATION & TEST</h4>
-          <p>Rigorous board bring-up, functional testing, and environmental stress screening to ensure your product survives the real world.</p>
+          <h4 style="color: var(--primary);">04. PCB Layout</h4>
+          <h5 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 15px; color: var(--text-main);">High-Density & Signal Integrity</h5>
+          <p>
+            We execute complex multi-layer board layouts with a strict focus on signal integrity and thermal performance. Our designs prioritize mixed-signal isolation, efficient power delivery networks (PDN), and critical component placement for high-density applications.
+          </p>
         </div>
+
+        <div class="card">
+            <h4 style="color: var(--primary);">05. DEBUG & FORENSICS</h4>
+            <h5 style="font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 15px; color: var(--text-main);">Root Cause Analysis</h5>
+            <p>
+                System-level troubleshooting and hardware validation. We identify bottlenecks in complex mixed-signal chains, resolve EMI/EMC compliance failures, and debug intermittent firmware/hardware race conditions using advanced logic analysis.
+            </p>
+        </div>
+
       </div>
     </section>
 
-    <section class="container" style="padding-bottom: 100px;">
-      <div class="grid-header">
-        <h3>EXECUTION_PROTOCOL</h3>
-        <p>How we move from concept to completion.</p>
-      </div>
-      <div style="margin-top: 40px; border-left: 1px solid var(--border);">
+    <section class="container" style="padding: 80px 20px 120px 20px;">
+      <div style="border: 1px solid var(--border); background: var(--bg-card); padding: 40px;">
         
-        <div class="process-step">
-          <span style="font-family: var(--font-code); color: var(--primary);">PHASE_01</span>
-          <h4>REQUIREMENTS & ARCHITECTURE</h4>
-          <p style="font-family: var(--font-code); color: var(--text-muted);">We analyze your constraints, select key components, and define the system architecture to minimize risk.</p>
+        <div style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px;">
+          <h3 style="font-size: 2rem; color: var(--text-main);">FACILITY_INVENTORY</h3>
+          <p style="font-family: var(--font-code); color: var(--primary);">// STATUS: FULLY OPERATIONAL</p>
         </div>
 
-        <div class="process-step">
-          <span style="font-family: var(--font-code); color: var(--primary);">PHASE_02</span>
-          <h4>SCHEMATIC & LAYOUT</h4>
-          <p style="font-family: var(--font-code); color: var(--text-muted);">Detailed design work using Altium/KiCad. We handle stack-up management, routing, and 3D modeling.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
+          
+          <div>
+            <h5 style="font-family: var(--font-code); color: var(--text-muted); margin-bottom: 15px;">[TEST_EQUIPMENT]</h5>
+            <ul style="list-style: none; font-family: var(--font-code); line-height: 2; color: var(--text-main);">
+              <li>> High-Bandwidth Oscilloscopes</li>
+              <li>> Arbitrary Waveform Generators</li>
+              <li>> Keithley 2000 Precision DMM</li>
+              <li>> Logic Analyzers</li>
+              <li>> Switching & Linear PSUs</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5 style="font-family: var(--font-code); color: var(--text-muted); margin-bottom: 15px;">[FABRICATION_TOOLS]</h5>
+            <ul style="list-style: none; font-family: var(--font-code); line-height: 2; color: var(--text-main);">
+              <li>> Metcal Soldering Stations</li>
+              <li>> 0201 Component Capability</li>
+              <li>> Stereo Microscope Inspection</li>
+              <li>> 3D Printing (Prototyping)</li>
+              <li>> Thermal Stress Testing</li>
+            </ul>
+          </div>
+
+          <div>
+            <h5 style="font-family: var(--font-code); color: var(--text-muted); margin-bottom: 15px;">[DEVELOPMENT_KITS]</h5>
+            <ul style="list-style: none; font-family: var(--font-code); line-height: 2; color: var(--text-main);">
+              <li>> Xilinx/Intel FPGA Boards</li>
+              <li>> STM32 Nucleo/Discovery</li>
+              <li>> Nordic nRF Dev Kits</li>
+              <li>> Custom Breakout Boards</li>
+            </ul>
+          </div>
+
         </div>
 
-        <div class="process-step">
-          <span style="font-family: var(--font-code); color: var(--primary);">PHASE_03</span>
-          <h4>PROTOTYPING & BRING-UP</h4>
-          <p style="font-family: var(--font-code); color: var(--text-muted);">Manufacturing oversight and lab testing. We verify power rails, signals, and firmware logic.</p>
-        </div>
+        <p style="margin-top: 40px; font-family: var(--font-code); font-size: 0.9rem; color: var(--text-muted); border-top: 1px dashed var(--border); padding-top: 20px;">
+            Our in-house engineering lab enables rapid prototyping and forensic debugging. Equipped with high-bandwidth oscilloscopes, waveform generators, and precision multimeters (Keithley 2000), we validate designs instantly. We also leverage internal 3D printing and micro-soldering capabilities (down to 0201 components) to iterate hardware without external dependencies.
+        </p>
 
       </div>
     </section>
@@ -96,6 +147,7 @@
   <footer>
     <div class="container">
       <p>SANGHERA SYSTEMS & CIRCUITS INC. © 2025</p>
+      <p style="margin-top: 10px; opacity: 0.5;">ENGINEERED FOR PERFORMANCE</p>
     </div>
   </footer>
 
