@@ -1,0 +1,315 @@
+:root {
+  /* Palette: Infrared Engineering */
+  --bg-core: #050505;       /* Pure Void Black */
+  --bg-card: #0a0a0a;       /* Slightly lighter black */
+  --text-main: #ffffff;     /* Pure White for readability */
+  --text-muted: #888888;    /* Grey for secondary text */
+  
+  /* The "Red" Energy */
+  --primary: #FF3B30;       /* High-vis Neon Red */
+  --primary-dim: #5c1511;   /* Dark Red background */
+  --gradient-text: linear-gradient(90deg, #FF3B30 0%, #FF9500 100%); /* Red to Amber Gradient */
+  
+  --border: #222222;
+  --border-active: #FF3B30;
+  
+  /* Fonts */
+  --font-display: 'Space Grotesk', sans-serif; /* Boxy, technical */
+  --font-code: 'JetBrains Mono', monospace;    /* The "Code" look */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-core);
+  color: var(--text-main);
+  font-family: var(--font-display);
+  line-height: 1.5;
+  overflow-x: hidden; /* Prevent scroll from marquee */
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4 {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.container {
+  max-width: 1400px; /* Wider, modern container */
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* --- Navigation (Glass & Grid) --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5, 5, 5, 0.8);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.logo h1 {
+  font-size: 1.2rem;
+  font-family: var(--font-code);
+  color: var(--primary);
+  letter-spacing: -0.05em;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+}
+
+nav a {
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+nav a:hover, nav a.active {
+  color: var(--primary);
+}
+
+/* --- Hero Section (Red Tinted Image) --- */
+.hero {
+  position: relative;
+  height: 90vh; /* Almost full screen */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+/* The Image Overlay Effect */
+.hero-bg {
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../IMG_1938.jpeg'); /* Ensure path is correct */
+  background-size: cover;
+  background-position: center;
+  /* This creates the Red/Black duotone effect on your image */
+  background-color: var(--bg-core);
+  background-blend-mode: luminosity; 
+  opacity: 0.4;
+  z-index: 0;
+}
+
+/* A Red Gradient Overlay for drama */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, var(--bg-core) 100%);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 1000px;
+  padding: 0 20px;
+}
+
+/* --- Animated Typewriter Header --- */
+.hero h2 {
+  font-size: clamp(3rem, 8vw, 6rem); /* Massive responsive text */
+  line-height: 0.9;
+  margin-bottom: 20px;
+  color: transparent;
+  background: var(--gradient-text);
+  -webkit-background-clip: text; /* Gradient text */
+  background-clip: text;
+  
+  /* The Typing Animation Setup */
+  overflow: hidden; 
+  white-space: nowrap; 
+  border-right: .15em solid var(--primary); /* The Cursor */
+  width: 0;
+  margin: 0 auto 30px auto;
+  animation: 
+    typing 3.5s steps(30, end) forwards,
+    blink-caret .75s step-end infinite;
+}
+
+.hero p {
+  font-family: var(--font-code);
+  font-size: 1.1rem;
+  color: var(--text-main);
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  background: #000;
+  display: inline-block; /* Boxed look */
+  padding: 5px 10px;
+}
+
+/* --- Buttons (Suno Style) --- */
+.btn-primary {
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--bg-core);
+  background: var(--primary);
+  padding: 16px 40px;
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); /* Sci-Fi Shape */
+}
+
+.btn-primary:hover {
+  background: #fff;
+  color: #000;
+  transform: scale(1.05);
+}
+
+/* --- Infinite Marquee (The scrolling text) --- */
+.marquee-wrapper {
+  background: var(--primary);
+  color: var(--bg-core);
+  padding: 15px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-code);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: scroll 20s linear infinite;
+}
+
+.marquee-content span {
+  margin-right: 50px;
+}
+
+/* --- Grid Layout (Bento) --- */
+.services-section {
+  padding: 100px 0;
+}
+
+.grid-header {
+  margin-bottom: 60px;
+  border-left: 4px solid var(--primary);
+  padding-left: 20px;
+}
+
+.grid-header h3 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1px; /* Tiny gap for border effect */
+  background: var(--border); /* Creates the borders between cards */
+  border: 1px solid var(--border);
+}
+
+.card {
+  background: var(--bg-core);
+  padding: 40px;
+  min-height: 300px;
+  position: relative;
+  transition: 0.3s;
+  overflow: hidden;
+}
+
+/* Hover Effect: Glow from bottom */
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  background: var(--bg-card);
+}
+
+.card:hover::after {
+  transform: scaleX(1);
+}
+
+.card h4 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: var(--text-main);
+}
+
+.card p {
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* --- Footer --- */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 60px 0;
+  text-align: center;
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* --- Animations --- */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--primary) }
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .hero h2 {
+    font-size: 2.5rem;
+    white-space: normal; /* Disable typing on mobile to prevent breakage */
+    animation: none;
+    border: none;
+    width: auto;
+  }
+}

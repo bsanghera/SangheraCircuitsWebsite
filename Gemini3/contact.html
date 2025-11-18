@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Contact Sanghera Systems" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CONTACT | SANGHERA SYSTEMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <h1>SANGHERA_SYSTEMS_INC.</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container contact-wrapper">
+    <div class="contact-info">
+      <h3>INITIATE<br><span style="color: var(--primary);">PROJECT</span></h3>
+      <p>
+        Ready to engineer the future? Fill out the form to request a consultation or quote.
+      </p>
+      
+      <div style="margin-top: 40px;">
+        <p style="margin-bottom: 5px;">DIRECT EMAIL</p>
+        <a href="mailto:info@sanghera-systems.com" class="contact-link">[email protected]</a>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <p style="margin-bottom: 5px;">LOCATION</p>
+        <span style="font-family: var(--font-code); font-size: 1.1rem;">California, USA</span>
+      </div>
+    </div>
+
+    <div class="form-container">
+      <form action="https://formspree.io/f/yourFormID" method="POST">
+        
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your name" required />
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="_replyto" placeholder="Enter your email" required />
+        </div>
+
+        <div>
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" placeholder="Project type" required />
+        </div>
+
+        <div>
+          <label for="message">Brief</label>
+          <textarea id="message" name="message" placeholder="Describe your engineering requirements..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%;">TRANSMIT REQUEST</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>SANGHERA SYSTEMS & CIRCUITS INC. © 2025</p>
+    </div>
+  </footer>
+
+</body>
+</html>

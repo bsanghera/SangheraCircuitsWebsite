@@ -1,0 +1,307 @@
+:root {
+  --bg-core: #F9F8F6;       /* Engineering Cream / Off-White */
+  --bg-card: #FFFFFF;       /* Pure White for cards */
+  --text-heading: #111827;  /* Sharp Charcoal Black */
+  --text-body: #4B5563;     /* Technical Grey */
+  --accent-primary: #0f766e; /* Deep Tech Teal */
+  --accent-highlight: #06b6d4; /* Electric Cyan */
+  --border: #E5E7EB;        /* Light Grey Border */
+  --font-heading: 'Rajdhani', sans-serif;
+  --font-main: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-core);
+  /* Subtle Dot Grid Pattern for Engineering Feel */
+  background-image: radial-gradient(#cfd8dc 1px, transparent 1px);
+  background-size: 24px 24px; 
+  color: var(--text-body);
+  font-family: var(--font-main);
+  line-height: 1.6;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4 {
+  color: var(--text-heading);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Header --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  background: rgba(249, 248, 246, 0.95); /* Matches cream bg */
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.logo h1 {
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+  color: var(--text-heading);
+  font-weight: 800;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+}
+
+nav a {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-body);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+nav a:hover, nav a.active {
+  color: var(--accent-primary);
+}
+
+/* --- Hero Section (Split Layout) --- */
+.hero {
+  position: relative;
+  padding: 80px 0 100px 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; /* More space for text */
+  gap: 40px;
+  align-items: center;
+  z-index: 2;
+  position: relative;
+}
+
+.hero-content h2 {
+  font-size: 4.5rem;
+  line-height: 0.95;
+  margin-bottom: 25px;
+  color: var(--text-heading);
+}
+
+.hero-content .highlight {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--accent-primary); /* Outline effect */
+  position: relative;
+}
+.hero-content .highlight::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  color: var(--accent-primary);
+  opacity: 0.2;
+  z-index: -1;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  color: var(--text-body);
+  max-width: 600px;
+  margin-bottom: 40px;
+  border-left: 4px solid var(--accent-highlight);
+  padding-left: 20px;
+}
+
+/* Image styling for Light Mode */
+.hero-image-wrapper {
+  position: relative;
+  height: 500px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 20px 20px 0px rgba(15, 118, 110, 0.1); /* Offset shadow decoration */
+}
+
+.hero-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.1); /* Black and white image to fit cream theme */
+  transition: filter 0.5s ease;
+}
+
+.hero-image-wrapper:hover img {
+  filter: grayscale(0%) contrast(1); /* Color returns on hover */
+}
+
+/* Button */
+.btn-primary {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  padding: 18px 35px;
+  font-weight: 700;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+  background-color: #115e59;
+}
+
+/* --- Capabilities Strip --- */
+.capabilities {
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 30px 0;
+}
+
+.capability-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.capability-list .item {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.capability-list .item span {
+  color: var(--accent-highlight);
+  font-size: 1.5em;
+  line-height: 0;
+}
+
+/* --- Services Grid --- */
+.services-preview {
+  padding: 100px 0;
+}
+
+.section-header {
+  margin-bottom: 60px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.section-header h3 {
+  font-size: 2.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  background: var(--bg-card);
+  padding: 40px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  top: 0;
+}
+
+.card:hover {
+  top: -5px;
+  border-color: var(--accent-primary);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+.card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--text-heading);
+}
+
+.card p {
+  font-size: 1rem;
+  color: var(--text-body);
+}
+
+/* Numbering decoration for cards */
+.card::before {
+  content: attr(data-step);
+  font-family: var(--font-heading);
+  font-size: 4rem;
+  color: #f3f4f6; /* Very faint grey */
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-weight: 700;
+  z-index: 0;
+}
+
+.card h4, .card p {
+  position: relative; /* Ensure text sits above the number decoration */
+  z-index: 1;
+}
+
+/* --- Footer --- */
+footer {
+  background-color: var(--text-heading); /* Dark footer for contrast */
+  color: #9ca3af;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+footer p {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .hero .container {
+    grid-template-columns: 1fr;
+  }
+  .hero-image-wrapper {
+    order: -1; /* Image on top on mobile */
+    height: 300px;
+    margin-bottom: 30px;
+  }
+  .hero-content h2 {
+    font-size: 3rem;
+  }
+}

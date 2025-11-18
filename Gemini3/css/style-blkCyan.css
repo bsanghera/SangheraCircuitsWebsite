@@ -1,0 +1,270 @@
+:root {
+  --bg-core: #0a0e1a;       /* Darker, more saturated blue-black */
+  --bg-card: #161e2f;       /* Dark blue-grey for cards */
+  --text-main: #e0e6f0;     /* Lighter, cooler white */
+  --accent: #00e6e6;        /* Brighter Electric Cyan */
+  --accent-dim: #00b3b3;    /* Muted Cyan */
+  --border: #2a384f;        /* Darker, bluer border */
+  --font-heading: 'Rajdhani', sans-serif; /* Futuristic heading font */
+  --font-main: 'Inter', sans-serif;      /* Clean body font */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-core);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  line-height: 1.6;
+}
+
+/* --- Typography & Utilities --- */
+h1, h2, h3 {
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.03em; /* Tighter for futuristic feel */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Header / Nav --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(10, 14, 26, 0.9); /* Opaque background for sticky header */
+  backdrop-filter: blur(8px); /* Slightly less blur */
+  z-index: 1000;
+}
+
+.logo h1 {
+  font-size: 1.3rem; /* Slightly larger logo */
+  text-transform: uppercase;
+  letter-spacing: 1.5px; /* More prominent tracking */
+  color: var(--accent);
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 35px; /* Slightly wider gap */
+}
+
+nav a {
+  font-size: 0.95rem; /* Slightly larger nav links */
+  font-weight: 500;
+}
+
+nav a:hover, nav a.active {
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(0, 230, 230, 0.5); /* Subtle glow on hover */
+}
+
+/* --- Hero Section --- */
+.hero {
+  position: relative;
+  padding: 120px 20px; /* More vertical padding */
+  text-align: center;
+  overflow: hidden; /* Ensure image doesn't spill */
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('IMG_1938.jpeg'); /* Your image here */
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.4) contrast(1.1); /* Darken and add contrast */
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(10, 14, 26, 0.6), rgba(10, 14, 26, 0.9)); /* Gradient for text readability */
+  z-index: 2;
+}
+
+.hero .container {
+  position: relative; /* Bring content above overlay */
+  z-index: 3;
+}
+
+.hero h2 {
+  font-size: 4.5rem; /* Larger, more impactful heading */
+  line-height: 1;
+  margin-bottom: 25px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-transform: uppercase; /* Match Lightmatter style */
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(0, 230, 230, 0.4); /* Subtle glow */
+}
+
+.hero .highlight {
+  color: var(--accent);
+}
+
+.hero p {
+  font-size: 1.35rem; /* Larger, more readable intro text */
+  color: #a0aec0; /* Slightly bluer grey */
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--bg-core);
+  padding: 18px 40px; /* Larger button */
+  border-radius: 6px; /* Slightly more rounded */
+  font-weight: 700;
+  display: inline-block;
+  border: 2px solid var(--accent); /* Thicker border */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(0, 230, 230, 0.5);
+}
+
+/* --- Capabilities Section (Replaced Tech Stack) --- */
+.capabilities {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  background-color: #0d1222; /* Slightly different background for distinction */
+}
+
+.capabilities .container p.section-subheading {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #6a7f9b;
+  margin-bottom: 30px;
+}
+
+.capability-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 40px;
+}
+
+.capability-list .item {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  position: relative;
+  padding-left: 25px;
+  text-align: left;
+}
+
+.capability-list .item::before {
+  content: '⚡'; /* Lightning bolt icon */
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+
+/* --- Services Grid (Bento Style) --- */
+.services-preview {
+  padding: 80px 0;
+  background-color: var(--bg-core);
+}
+
+.section-header {
+  margin-bottom: 60px; /* More space */
+  text-align: center;
+}
+
+.section-header h3 {
+  font-size: 2.5rem; /* Larger section title */
+  margin-bottom: 15px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 230, 230, 0.2);
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #a0aec0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider min for cards */
+  gap: 25px; /* More gap */
+}
+
+.card {
+  background: var(--bg-card);
+  padding: 35px; /* More padding */
+  border: 1px solid var(--border);
+  border-radius: 10px; /* Slightly more rounded */
+  transition: transform 0.2s ease-out, border-color 0.2s ease-out;
+  display: flex; /* Flex for icon/title alignment */
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.card:hover {
+  transform: translateY(-8px); /* More pronounced lift */
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(0, 230, 230, 0.15); /* Subtle shadow on hover */
+}
+
+.card h4 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 1.4rem; /* Larger card titles */
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #aab2bd;
+}
+
+/* --- Footer --- */
+footer {
+  padding: 50px 20px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: #6a7f9b; /* Bluer grey for footer text */
+}

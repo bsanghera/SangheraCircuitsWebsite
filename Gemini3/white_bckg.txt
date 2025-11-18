@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Sanghera Systems & Circuits Inc. - Precision Hardware Engineering" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sanghera Systems & Circuits | Hardware Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <h1>SANGHERA SYSTEMS</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="about.html">Company</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h2>Precision <br> Hardware. <br> <span class="highlight" data-text="SCALABLE SYSTEMS">Scalable Systems</span></h2>
+        <p>
+          We bridge the gap between concept and silicon. Specializing in high-speed PCB layout, 
+          firmware, and power electronics, we engineer hardware that powers the future.
+        </p>
+        <a href="contact.html" class="btn-primary">Start a Project</a>
+      </div>
+      
+      <div class="hero-image-wrapper">
+        <img src="IMG_1938.jpeg" alt="Hardware Circuit Close-up">
+      </div>
+    </div>
+  </section>
+
+  <section class="capabilities">
+    <div class="container">
+      <div class="capability-list">
+        <div class="item"><span>&#8226;</span> High-Speed PCB</div>
+        <div class="item"><span>&#8226;</span> FPGA Dev</div>
+        <div class="item"><span>&#8226;</span> Power Electronics</div>
+        <div class="item"><span>&#8226;</span> Embedded Firmware</div>
+        <div class="item"><span>&#8226;</span> DFM Optimization</div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="services-preview container">
+      <div class="section-header">
+        <h3>Core Competencies</h3>
+        <p>Deploying advanced engineering for complex challenges.</p>
+      </div>
+
+      <div class="grid">
+        <div class="card" data-step="01">
+          <h4>Schematic Design</h4>
+          <p>From component selection to schematic capture, we design robust architectures optimized for cost, availability, and performance.</p>
+        </div>
+        <div class="card" data-step="02">
+          <h4>PCB Layout</h4>
+          <p>High-speed digital, RF, and multi-layer designs ensuring signal integrity and manufacturability standards.</p>
+        </div>
+        <div class="card" data-step="03">
+          <h4>Embedded Systems</h4>
+          <p>Custom firmware development and microcontroller programming (STM32, Nordic, ESP) to bring your hardware to life.</p>
+        </div>
+        <div class="card" data-step="04">
+          <h4>Validation</h4>
+          <p>Rigorous testing procedures to ensure compliance, reliability, and industrial-grade performance before mass manufacturing.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Sanghera Systems & Circuits Inc. | All Rights Reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
