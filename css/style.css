@@ -34,9 +34,9 @@ body {
 
 /* --- Typography --- */
 h1, h2, h3, h4 {
-  font-weight: 700;
+  font-weight: 200;
   text-transform: uppercase;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
 }
 
 a {
@@ -136,7 +136,7 @@ nav a:hover, nav a.active {
 
 /* --- Animated Typewriter Header --- */
 .hero h2 {
-  font-size: clamp(3rem, 8vw, 6rem); /* Massive responsive text */
+  font-size: clamp(2.5rem, 6vw, 5rem); /* Massive responsive text */
   line-height: 0.9;
   margin-bottom: 20px;
   color: transparent;
