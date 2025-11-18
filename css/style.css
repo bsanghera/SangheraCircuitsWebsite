@@ -404,7 +404,7 @@ textarea {
   margin-bottom: 10px;
 }
 
-/* Responsive Form .*/
+/* Responsive Form */
 @media (max-width: 768px) {
   .contact-wrapper {
     grid-template-columns: 1fr;
