@@ -411,49 +411,63 @@ textarea {
   }
 }
 /* --- Mobile Responsive Fixes (Add to bottom of style.css) --- */
+/* --- Mobile Responsive Fixes (Update the bottom of style.css) --- */
 @media (max-width: 768px) {
   
   /* 1. Stack the Header vertically */
   header {
     flex-direction: column;
-    padding: 15px 20px; /* Reduce padding */
-    height: auto; /* Allow it to grow */
+    padding: 15px 20px;
+    height: auto;
     gap: 15px;
   }
 
   /* 2. Allow Navigation to Wrap */
   nav ul {
-    flex-wrap: wrap; /* Lets items drop to next line if needed */
-    justify-content: center; /* Center the links */
-    gap: 15px 25px; /* Smaller gap (15px vertical, 25px horizontal) */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px 20px;
     width: 100%;
   }
 
-  /* 3. Adjust Nav Link Size for Touch */
   nav a {
     font-size: 0.8rem;
     display: inline-block;
-    padding: 5px 0; /* Larger touch target */
+    padding: 5px 0;
   }
 
-  /* 4. Ensure Logo doesn't break layout */
   .logo h1 {
     font-size: 1.1rem;
     text-align: center;
   }
 
-  /* 5. Fix Hero Text sizing on very small screens */
+  /* 3. Fix Hero Text: Enable Animation & Scale Down */
   .hero h2 {
-    font-size: 2.2rem; /* Smaller font for mobile */
-    white-space: normal; /* Allow wrapping */
-    border: none; /* Remove typing cursor on mobile */
-    animation: none; /* Disable typing animation on mobile */
-    width: auto; /* Let it fill width naturally */
-    text-align: center;
+    /* Use 'vw' (viewport width) so text shrinks to fit any phone screen width exactly */
+    font-size: 5.5vw; 
+    
+    /* RESTORE ANIMATION SETTINGS */
+    white-space: nowrap; /* Force one line for typing effect */
+    border-right: .15em solid var(--primary); /* Restore cursor */
+    width: 0; /* Start invisible */
+    
+    /* Re-apply the animation (it might be overridden by desktop styles otherwise) */
+    animation: 
+      typing 3s steps(22, end) forwards,
+      blink-caret .75s step-end infinite;
+      
+    margin: 0 auto 20px auto;
+  }
+
+  /* 4. Make Marquee Text Smaller on Mobile */
+  .marquee-wrapper {
+    font-size: 0.7rem; /* Much smaller text */
+    padding: 10px 0;   /* Less padding height */
   }
   
-  /* 6. Ensure Marquee doesn't cause scroll */
-  .marquee-wrapper {
-    font-size: 0.9rem;
+  /* 5. Adjust form layout for mobile */
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
   }
 }
