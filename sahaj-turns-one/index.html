@@ -302,12 +302,12 @@
   .zelle .qr-frame  { background: #F8F0FF; border: 2px dashed #C09FEB; }
 
   /* Decorative corner brackets on QR frame */
-  .qr-frame::before, .qr-frame::after {
+/*  .qr-frame::before, .qr-frame::after {
     content: '';
     position: absolute;
     width: 18px;
     height: 18px;
-    border-radius: 4px;
+    border-radius: 4px;*/
   }
   .venmo .qr-frame::before  { top: 6px; left: 6px;  border-top: 2.5px solid #008CFF; border-left: 2.5px solid #008CFF; }
   .venmo .qr-frame::after   { bottom: 6px; right: 6px; border-bottom: 2.5px solid #008CFF; border-right: 2.5px solid #008CFF; }
@@ -524,6 +524,7 @@
 
   <!-- PARENT NOTE -->
   <div class="note-card fade-up delay-4">
+    <p class="note-label"></p>
     <p class="note-label">A note from the parents</p>
     <p class="note-text">
       "We’re so grateful for your love and generosity as we celebrate Sahaj’s first birthday. Any contribution, big or small, will go toward his future and be deposited by us into his custodial investment account."
