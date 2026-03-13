@@ -59,7 +59,7 @@ module.exports = async function handler(req, res) {
     console.log('overview_polyline:', JSON.stringify(route.overview_polyline));
     console.log('legs count:', route.legs ? route.legs.length : 'none');
 
-    const polylineValue = route.overview_polyline && route.overview_polyline.value;
+    const polylineValue = route.overview_polyline && route.overview_polyline.points;
     if (!polylineValue) {
       return res.status(500).json({ error: 'No polyline in directions response' });
     }
