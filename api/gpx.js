@@ -4,20 +4,17 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Security: basic rate limit via Vercel's edge (no state needed)
   const GMAPS_KEY = process.env.GOOGLE_MAPS_API_KEY;
   if (!GMAPS_KEY) {
-    return res.status(500).json({ error: 'Server misconfiguration' }); // never expose key name
+    return res.status(500).json({ error: 'Server misconfiguration' });
   }
 
   const { gmaps_url, origin, destination } = req.query;
 
-  // Security: validate inputs exist
   if (!gmaps_url && !(origin && destination)) {
     return res.status(400).json({ error: 'Provide gmaps_url or both origin and destination' });
   }
 
-  // Security: if gmaps_url provided, validate it looks like a Google Maps URL
   if (gmaps_url) {
     const decoded = decodeURIComponent(gmaps_url);
     const isGoogleUrl = /^https:\/\/(maps\.app\.goo\.gl|www\.google\.com\/maps|maps\.google\.com)/.test(decoded);
@@ -39,11 +36,11 @@ module.exports = async function handler(req, res) {
       resolvedDestination = parsed.destination;
     }
 
-    // Security: sanitize coords/place names — strip anything that isn't alphanumeric, spaces, commas, dots, dashes
     resolvedOrigin = resolvedOrigin.replace(/[^a-zA-Z0-9 .,\-+]/g, '').substring(0, 200);
     resolvedDestination = resolvedDestination.replace(/[^a-zA-Z0-9 .,\-+]/g, '').substring(0, 200);
 
-    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json` +
+    const directionsUrl =
+      `https://maps.googleapis.com/maps/api/directions/json` +
       `?origin=${encodeURIComponent(resolvedOrigin)}` +
       `&destination=${encodeURIComponent(resolvedDestination)}` +
       `&mode=bicycling` +
@@ -52,7 +49,6 @@ module.exports = async function handler(req, res) {
     const gmaps = await fetch(directionsUrl).then(r => r.json());
 
     if (gmaps.status !== 'OK') {
-      // Security: don't leak API error details to client
       return res.status(400).json({ error: 'Could not get directions. Check that both points are valid.' });
     }
 
@@ -61,7 +57,6 @@ module.exports = async function handler(req, res) {
     const steps = route.legs[0].steps;
     const gpx = buildGpx(points, steps, resolvedOrigin, resolvedDestination);
 
-    // Security: no caching of personal route data
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'application/gpx+xml');
     res.setHeader('Content-Disposition', 'attachment; filename="route.gpx"');
@@ -69,7 +64,6 @@ module.exports = async function handler(req, res) {
     return res.send(gpx);
 
   } catch (err) {
-    // Security: never expose internal error details
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 };
@@ -106,10 +100,12 @@ function decodePolyline(encoded) {
 function buildGpx(points, steps, origin, destination) {
   const wpts = steps.map(s => {
     const loc = s.start_location;
-    // Strip all HTML tags from instructions
     const instr = s.html_instructions.replace(/<[^>]+>/g, '').substring(0, 60);
-    // Escape XML special characters
-    const safe = instr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const safe = instr
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
     return `  <wpt lat="${loc.lat}" lon="${loc.lng}"><name>${safe}</name></wpt>`;
   }).join('\n');
 
@@ -118,7 +114,9 @@ function buildGpx(points, steps, origin, destination) {
   ).join('\n');
 
   const safeName = `${origin} to ${destination}`
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="KioxRouter">
