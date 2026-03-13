@@ -11,6 +11,10 @@ module.exports = async function handler(req, res) {
 
   const { gmaps_url, origin, destination } = req.query;
 
+  console.log('Raw gmaps_url param:', gmaps_url);
+  console.log('Raw origin param:', origin);
+  console.log('Raw destination param:', destination);
+
   if (!gmaps_url && !(origin && destination)) {
     return res.status(400).json({ error: 'Provide gmaps_url or both origin and destination' });
   }
