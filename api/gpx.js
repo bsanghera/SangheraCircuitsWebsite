@@ -55,13 +55,16 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Could not get directions. Check that both points are valid.' });
     }
 
-    if (!gmaps.routes || !gmaps.routes[0] || !gmaps.routes[0].overview_polyline) {
-      console.log('Unexpected routes structure:', JSON.stringify(gmaps).substring(0, 500));
-      return res.status(500).json({ error: 'Unexpected response from directions API' });
+    const route = gmaps.routes[0];
+    console.log('overview_polyline:', JSON.stringify(route.overview_polyline));
+    console.log('legs count:', route.legs ? route.legs.length : 'none');
+
+    const polylineValue = route.overview_polyline && route.overview_polyline.value;
+    if (!polylineValue) {
+      return res.status(500).json({ error: 'No polyline in directions response' });
     }
 
-    const route = gmaps.routes[0];
-    const points = decodePolyline(route.overview_polyline.value);
+    const points = decodePolyline(polylineValue);
     const steps = route.legs[0].steps;
     const gpx = buildGpx(points, steps, resolvedOrigin, resolvedDestination);
 
