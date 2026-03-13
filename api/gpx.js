@@ -64,6 +64,7 @@ module.exports = async function handler(req, res) {
     return res.send(gpx);
 
   } catch (err) {
+    console.error('GPX handler error:', err.message, err.stack);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 };
