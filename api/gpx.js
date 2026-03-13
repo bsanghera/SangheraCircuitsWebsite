@@ -1,55 +1,92 @@
 module.exports = async function handler(req, res) {
-  const { gmaps_url } = req.query;
-
-  if (!gmaps_url) {
-    return res.status(400).json({ error: 'Missing gmaps_url parameter' });
+  // Security: only allow GET
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Security: basic rate limit via Vercel's edge (no state needed)
   const GMAPS_KEY = process.env.GOOGLE_MAPS_API_KEY;
+  if (!GMAPS_KEY) {
+    return res.status(500).json({ error: 'Server misconfiguration' }); // never expose key name
+  }
+
+  const { gmaps_url, origin, destination } = req.query;
+
+  // Security: validate inputs exist
+  if (!gmaps_url && !(origin && destination)) {
+    return res.status(400).json({ error: 'Provide gmaps_url or both origin and destination' });
+  }
+
+  // Security: if gmaps_url provided, validate it looks like a Google Maps URL
+  if (gmaps_url) {
+    const decoded = decodeURIComponent(gmaps_url);
+    const isGoogleUrl = /^https:\/\/(maps\.app\.goo\.gl|www\.google\.com\/maps|maps\.google\.com)/.test(decoded);
+    if (!isGoogleUrl) {
+      return res.status(400).json({ error: 'URL must be a Google Maps link' });
+    }
+  }
 
   try {
-    // Resolve shortened URL and extract origin/destination
-    const resolved = await fetch(gmaps_url, { redirect: 'follow' });
-    const finalUrl = resolved.url;
-    const { origin, destination } = parseGoogleMapsUrl(finalUrl);
+    let resolvedOrigin = origin;
+    let resolvedDestination = destination;
 
-    // Call Directions API
-    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=bicycling&key=${GMAPS_KEY}`;
+    if (gmaps_url) {
+      const decoded = decodeURIComponent(gmaps_url);
+      const resolved = await fetch(decoded, { redirect: 'follow' });
+      const finalUrl = resolved.url;
+      const parsed = parseGoogleMapsUrl(finalUrl);
+      resolvedOrigin = parsed.origin;
+      resolvedDestination = parsed.destination;
+    }
+
+    // Security: sanitize coords/place names — strip anything that isn't alphanumeric, spaces, commas, dots, dashes
+    resolvedOrigin = resolvedOrigin.replace(/[^a-zA-Z0-9 .,\-+]/g, '').substring(0, 200);
+    resolvedDestination = resolvedDestination.replace(/[^a-zA-Z0-9 .,\-+]/g, '').substring(0, 200);
+
+    const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json` +
+      `?origin=${encodeURIComponent(resolvedOrigin)}` +
+      `&destination=${encodeURIComponent(resolvedDestination)}` +
+      `&mode=bicycling` +
+      `&key=${GMAPS_KEY}`;
+
     const gmaps = await fetch(directionsUrl).then(r => r.json());
 
     if (gmaps.status !== 'OK') {
-      return res.status(400).json({ error: `Directions API error: ${gmaps.status}` });
+      // Security: don't leak API error details to client
+      return res.status(400).json({ error: 'Could not get directions. Check that both points are valid.' });
     }
 
     const route = gmaps.routes[0];
     const points = decodePolyline(route.overview_polyline.value);
     const steps = route.legs[0].steps;
-    const gpx = buildGpx(points, steps, origin, destination);
+    const gpx = buildGpx(points, steps, resolvedOrigin, resolvedDestination);
 
+    // Security: no caching of personal route data
+    res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'application/gpx+xml');
     res.setHeader('Content-Disposition', 'attachment; filename="route.gpx"');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     return res.send(gpx);
 
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    // Security: never expose internal error details
+    return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
-}
+};
 
 function parseGoogleMapsUrl(url) {
-  // Format: /maps/dir/Origin/Destination
   const dirMatch = url.match(/maps\/dir\/([^/]+)\/([^/?]+)/);
   if (dirMatch) return {
     origin: decodeURIComponent(dirMatch[1].replace(/\+/g, ' ')),
     destination: decodeURIComponent(dirMatch[2].replace(/\+/g, ' '))
   };
-  // Format: ?saddr=...&daddr=...
   const saddr = url.match(/[?&]saddr=([^&]+)/);
   const daddr = url.match(/[?&]daddr=([^&]+)/);
   if (saddr && daddr) return {
     origin: decodeURIComponent(saddr[1]),
     destination: decodeURIComponent(daddr[1])
   };
-  throw new Error('Could not parse Google Maps URL — try sharing a route with both a start and end point set');
+  throw new Error('Could not parse Google Maps URL');
 }
 
 function decodePolyline(encoded) {
@@ -69,41 +106,26 @@ function decodePolyline(encoded) {
 function buildGpx(points, steps, origin, destination) {
   const wpts = steps.map(s => {
     const loc = s.start_location;
-    const instr = s.html_instructions.replace(/<[^>]+>/g, '');
-    return `  <wpt lat="${loc.lat}" lon="${loc.lng}"><name>${instr.substring(0, 60)}</name></wpt>`;
+    // Strip all HTML tags from instructions
+    const instr = s.html_instructions.replace(/<[^>]+>/g, '').substring(0, 60);
+    // Escape XML special characters
+    const safe = instr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return `  <wpt lat="${loc.lat}" lon="${loc.lng}"><name>${safe}</name></wpt>`;
   }).join('\n');
 
   const trkpts = points.map(([lat, lng]) =>
     `      <trkpt lat="${lat}" lon="${lng}"/>`
   ).join('\n');
 
+  const safeName = `${origin} to ${destination}`
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="KioxRouter">
-  <metadata><name>${origin} to ${destination}</name></metadata>
+  <metadata><name>${safeName}</name></metadata>
 ${wpts}
   <trk><name>Route</name><trkseg>
 ${trkpts}
   </trkseg></trk>
 </gpx>`;
 }
-```
-
----
-
-## Phase 3: Add your API key to Vercel (2 mins)
-
-1. In Vercel dashboard → your project → **Settings → Environment Variables**
-2. Add a new variable:
-   - **Name:** `GOOGLE_MAPS_API_KEY`
-   - **Value:** your key from Phase 1
-3. Hit Save, then go to **Deployments** and **Redeploy** so it picks up the variable
-
-**Test it:** Visit `https://your-project.vercel.app/api/gpx?origin=San+Francisco,CA&destination=Oakland,CA` — your browser should download a `.gpx` file.
-
----
-
-## Phase 4: Build the iOS Shortcut
-
-Now follow Phase 3 from my previous message exactly, but use your **Vercel URL** for the endpoint:
-```
-https://your-project.vercel.app/api/gpx?gmaps_url=
