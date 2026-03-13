@@ -48,8 +48,16 @@ module.exports = async function handler(req, res) {
 
     const gmaps = await fetch(directionsUrl).then(r => r.json());
 
+    console.log('Google API status:', gmaps.status, '| error_message:', gmaps.error_message || 'none');
+    console.log('Routes count:', gmaps.routes ? gmaps.routes.length : 'no routes key');
+
     if (gmaps.status !== 'OK') {
       return res.status(400).json({ error: 'Could not get directions. Check that both points are valid.' });
+    }
+
+    if (!gmaps.routes || !gmaps.routes[0] || !gmaps.routes[0].overview_polyline) {
+      console.log('Unexpected routes structure:', JSON.stringify(gmaps).substring(0, 500));
+      return res.status(500).json({ error: 'Unexpected response from directions API' });
     }
 
     const route = gmaps.routes[0];
