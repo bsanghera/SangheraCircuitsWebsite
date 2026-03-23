@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naturally Sweet Roasted Banana Bread — Oil-Free & Vegan</title>
+  <meta name="description" content="A moist, flavorful banana bread made with roasted bananas and medjool dates. No refined sugar, no oil, 100% vegan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #F5F0E8;
+      --warm-white: #FDFBF7;
+      --espresso: #2C1810;
+      --caramel: #B8860B;
+      --date-brown: #5C3A1E;
+      --banana-gold: #D4A843;
+      --cinnamon: #8B4513;
+      --cardamom-green: #6B7F52;
+      --blush: #E8D5C4;
+      --shadow: rgba(44, 24, 16, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Newsreader', Georgia, serif;
+      background: var(--cream);
+      color: var(--espresso);
+      line-height: 1.7;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Grain overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+      z-index: 9999;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(170deg, var(--warm-white) 0%, var(--blush) 50%, var(--cream) 100%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%);
+      top: -100px;
+      right: -150px;
+      animation: floatOrb 12s ease-in-out infinite;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(107,127,82,0.08) 0%, transparent 70%);
+      bottom: -50px;
+      left: -100px;
+      animation: floatOrb 15s ease-in-out infinite reverse;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -20px) scale(1.05); }
+    }
+
+    .hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cardamom-green);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      color: var(--espresso);
+      max-width: 14ch;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .hero-subtitle {
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.15rem;
+      color: var(--cinnamon);
+      max-width: 38ch;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+    }
+
+    .hero-meta-item {
+      text-align: center;
+    }
+
+    .hero-meta-item .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-meta-item .value {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.3rem;
+      color: var(--espresso);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.2s forwards;
+    }
+
+    .scroll-hint svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--caramel);
+      animation: bob 2s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Content wrapper ── */
+    .content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* ── Section divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 4rem 0 3rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--caramel);
+      opacity: 0.3;
+    }
+
+    .divider span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      white-space: nowrap;
+    }
+
+    /* ── Ingredients ── */
+    .ingredients-grid {
+      display: grid;
+      gap: 0;
+    }
+
+    .ingredient-group-title {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.1rem;
+      color: var(--cinnamon);
+      padding: 1.2rem 0 0.4rem;
+      border-bottom: 1px solid rgba(184,134,11,0.15);
+      margin-top: 0.5rem;
+    }
+
+    .ingredient-group-title:first-child {
+      margin-top: 0;
+    }
+
+    .ingredient-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.6rem 0;
+      border-bottom: 1px dotted rgba(44,24,16,0.1);
+      transition: background 0.2s ease;
+    }
+
+    .ingredient-row:hover {
+      background: rgba(212,168,67,0.06);
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+      border-radius: 4px;
+    }
+
+    .ingredient-name {
+      font-weight: 400;
+    }
+
+    .ingredient-qty {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--date-brown);
+      text-align: right;
+      flex-shrink: 0;
+      margin-left: 1.5rem;
+    }
+
+    /* ── Steps ── */
+    .step {
+      margin-bottom: 2.5rem;
+      padding-left: 3.5rem;
+      position: relative;
+    }
+
+    .step-number {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 2rem;
+      color: var(--caramel);
+      opacity: 0.5;
+      line-height: 1;
+    }
+
+    .step-title {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.25rem;
+      color: var(--espresso);
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      color: var(--date-brown);
+      font-weight: 300;
+    }
+
+    /* ── Tip cards ── */
+    .tips-section {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .tip-card {
+      background: var(--warm-white);
+      border: 1px solid rgba(184,134,11,0.15);
+      border-radius: 12px;
+      padding: 1.5rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--shadow);
+    }
+
+    .tip-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--banana-gold), var(--cardamom-green));
+      border-radius: 3px 0 0 3px;
+    }
+
+    .tip-card h3 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.05rem;
+      color: var(--espresso);
+      margin-bottom: 0.4rem;
+    }
+
+    .tip-card p {
+      font-weight: 300;
+      font-size: 0.95rem;
+      color: var(--date-brown);
+    }
+
+    /* ── Storage ── */
+    .storage-note {
+      background: linear-gradient(135deg, rgba(107,127,82,0.08), rgba(212,168,67,0.06));
+      border-radius: 12px;
+      padding: 1.5rem 1.8rem;
+      margin-top: 3rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--date-brown);
+    }
+
+    .storage-note strong {
+      font-style: normal;
+      font-weight: 400;
+      color: var(--espresso);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cinnamon);
+      opacity: 0.5;
+    }
+
+    /* ── Print styles ── */
+    @media print {
+      .hero { min-height: auto; padding: 2rem; }
+      .scroll-hint { display: none; }
+      body::after { display: none; }
+      .tip-card:hover { transform: none; box-shadow: none; }
+    }
+
+    /* ── Mobile adjustments ── */
+    @media (max-width: 600px) {
+      body { font-size: 16px; }
+      .content { padding: 0 1.2rem 4rem; }
+      .hero { padding: 2rem 1.2rem; min-height: 90vh; }
+      .hero-meta { gap: 1.5rem; }
+      .step { padding-left: 2.8rem; }
+      .step-number { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <p class="hero-label">Oil-Free &middot; Vegan &middot; No Refined Sugar</p>
+    <h1>Roasted Banana Bread</h1>
+    <p class="hero-subtitle">Deep caramelized sugars from roasted bananas and rich medjool dates — impossibly moist, naturally sweet.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="label">Prep</span>
+        <span class="value">15 min</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Roast</span>
+        <span class="value">20 min</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Bake</span>
+        <span class="value">45–55 min</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Pan</span>
+        <span class="value">9×5"</span>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"/>
+      </svg>
+    </div>
+  </section>
+
+  <main class="content">
+
+    <!-- ── Ingredients ── -->
+    <div class="divider"><span>Ingredients</span></div>
+
+    <div class="ingredients-grid">
+      <div class="ingredient-group-title">The Base</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Very ripe bananas <em>(black/spotted)</em></span>
+        <span class="ingredient-qty">3–4 large</span>
+      </div>
+
+      <div class="ingredient-group-title">The Sweetener</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Medjool dates <em>(pitted, soaked)</em></span>
+        <span class="ingredient-qty">10–12</span>
+      </div>
+
+      <div class="ingredient-group-title">The Binder</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Ground flaxseed</span>
+        <span class="ingredient-qty">1 tbsp</span>
+      </div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Warm water</span>
+        <span class="ingredient-qty">3 tbsp</span>
+      </div>
+
+      <div class="ingredient-group-title">The Moisture</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Unsweetened applesauce</span>
+        <span class="ingredient-qty">⅓ cup</span>
+      </div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Vanilla extract</span>
+        <span class="ingredient-qty">2 tsp</span>
+      </div>
+
+      <div class="ingredient-group-title">The Dry Mix</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Spelt or all-purpose flour</span>
+        <span class="ingredient-qty">2 cups</span>
+      </div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Baking soda</span>
+        <span class="ingredient-qty">1 tsp</span>
+      </div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Ground cinnamon</span>
+        <span class="ingredient-qty">1 tbsp</span>
+      </div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Sea salt</span>
+        <span class="ingredient-qty">½ tsp</span>
+      </div>
+
+      <div class="ingredient-group-title">Wildcard</div>
+      <div class="ingredient-row">
+        <span class="ingredient-name">Ground cardamom <em>(floral, citrusy depth)</em></span>
+        <span class="ingredient-qty">½ tsp</span>
+      </div>
+    </div>
+
+    <!-- ── Instructions ── -->
+    <div class="divider"><span>Instructions</span></div>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <h3 class="step-title">Roast the Bananas</h3>
+      <p>Preheat your oven to 150°C (300°F). Place the unpeeled bananas on a baking sheet and roast for 15–20 minutes until the skins are completely black. Let them cool slightly, then squeeze the soft fruit into a large bowl. Mash until mostly liquid.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <h3 class="step-title">Make the Date Paste</h3>
+      <p>While bananas roast, soak pitted dates in hot water for 10 minutes. Drain most of the water, keeping 2 tablespoons. Blend the dates and reserved water until a smooth paste forms.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <h3 class="step-title">The "Egg"</h3>
+      <p>Whisk the flaxseed and water in a small ramekin and let it sit for 5 minutes until it becomes gelatinous.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <h3 class="step-title">Combine Wet Ingredients</h3>
+      <p>Add the date paste, flax egg, applesauce, and vanilla to the mashed bananas. Whisk until the mixture is uniform.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">5</span>
+      <h3 class="step-title">Fold in Dry Ingredients</h3>
+      <p>Sift in the flour, baking soda, cinnamon, salt, and cardamom. Use a spatula to fold the mixture together until just combined. Over-mixing will make the bread tough rather than fluffy.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">6</span>
+      <h3 class="step-title">Bake</h3>
+      <p>Increase the oven temperature to 175°C (350°F). Grease your 9×5 pan or line it with parchment paper. Pour in the batter and smooth the top. Bake for 45–55 minutes.</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">7</span>
+      <h3 class="step-title">The Toothpick Test</h3>
+      <p>Since this recipe is high in fruit moisture, check the center with a toothpick. If it comes out clean or with just a few dry crumbs, it's done.</p>
+    </div>
+
+    <!-- ── Tips ── -->
+    <div class="divider"><span>Secrets for Success</span></div>
+
+    <div class="tips-section">
+      <div class="tip-card">
+        <h3>The Cooling Period</h3>
+        <p>Because this version is oil-free and vegan, it relies on starches to set. Let it cool in the pan for 15 minutes, then move it to a wire rack to cool completely — about 1.5 hours — before slicing. This prevents a gummy texture.</p>
+      </div>
+      <div class="tip-card">
+        <h3>The Savory Twist</h3>
+        <p>For a more complex flavor, sprinkle a tablespoon of toasted pepitas or a few hemp hearts on top before baking. The crunch contrasts the soft, sweet crumb beautifully.</p>
+      </div>
+    </div>
+
+    <div class="storage-note">
+      <strong>Storage tip:</strong> This bread is actually sweeter and more moist on day two. Store it in an airtight container at room temperature for 3 days, or in the fridge for up to a week.
+    </div>
+
+  </main>
+
+  <footer>Made with ripe bananas & good intentions</footer>
+
+</body>
+</html>
