@@ -1,16 +1,18 @@
-/* Minimal GitHub-backed admin. Uses token from your OAuth Worker. */
-
-const REPO = window.ADMIN_REPO;                // "owner/repo"
-const BRANCH = "main";
-const BASE = "meditation/data";
-const OAUTH_BASE = window.OAUTH_BASE;
+const API_BASE = String(window.MEDITATION_API_BASE || '').replace(/\/$/, '');
+let currentUser = null;
+let selectedUserId = null;
+let loadedEntries = [];
 
 const els = {
+  authGate: document.getElementById('authGate'),
+  editorApp: document.getElementById('editorApp'),
   loginBtn: document.getElementById('loginBtn'),
   logoutBtn: document.getElementById('logoutBtn'),
   userBadge: document.getElementById('userBadge'),
   userAvatar: document.getElementById('userAvatar'),
   userName: document.getElementById('userName'),
+  viewerControls: document.getElementById('viewerControls'),
+  viewerSelect: document.getElementById('viewerSelect'),
   entryForm: document.getElementById('entryForm'),
   entryDate: document.getElementById('entryDate'),
   entryDuration: document.getElementById('entryDuration'),
@@ -22,227 +24,175 @@ const els = {
   tabs: document.querySelectorAll('.tab'),
   tabpanels: document.querySelectorAll('.tabpanel'),
 };
-/* --- Listen for token from the OAuth popup (Worker posts this) --- */
-window.addEventListener('message', (e) => {
-  // String format: "authorization:github:success:<token>"
-  if (typeof e.data === 'string' && e.data.startsWith('authorization:github:success:')) {
-    const token = e.data.split(':').pop();
-    if (token) {
-      localStorage.setItem('gh_token', token);
-      afterLogin(); // proceed to load UI
-    }
+
+function toast(msg) {
+  els.toast.textContent = msg;
+  els.toast.hidden = false;
+  setTimeout(() => { els.toast.hidden = true; }, 2200);
+}
+
+function apiUrl(path, userId) {
+  const u = new URL(`${API_BASE}${path}`);
+  if (userId && currentUser && currentUser.role === 'admin' && userId !== currentUser.id) {
+    u.searchParams.set('user', userId);
   }
-  // Object formats (belt & suspenders, in case Worker sends object)
-  if (e.data && typeof e.data === 'object') {
-    if (e.data.token) {
-      localStorage.setItem('gh_token', e.data.token);
-      afterLogin();
-    }
-    if (e.data.type === 'authorization:github' && e.data.status === 'success' && e.data.token) {
-      localStorage.setItem('gh_token', e.data.token);
-      afterLogin();
+  if (path !== '/api/logout') u.searchParams.set('_', Date.now());
+  return u.toString();
+}
+
+async function api(path, init = {}, userId = null) {
+  const r = await fetch(apiUrl(path, userId), {
+    ...init,
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { ...(init.headers || {}) },
+  });
+  let data = null;
+  try { data = await r.json(); } catch {}
+  if (!r.ok) {
+    const err = new Error((data && data.error) || `Request failed (${r.status})`);
+    err.status = r.status;
+    throw err;
+  }
+  return data;
+}
+
+function esc(value = '') {
+  return String(value).replace(/[&<>\"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+}
+
+function showLogin() {
+  els.authGate.hidden = false;
+  els.editorApp.hidden = true;
+}
+
+function showEditor() {
+  els.authGate.hidden = true;
+  els.editorApp.hidden = false;
+}
+
+function renderEntriesList(entries) {
+  loadedEntries = [...entries].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  if (!loadedEntries.length) {
+    els.entriesList.innerHTML = '<div class="muted">No entries yet.</div>';
+    return;
+  }
+  els.entriesList.innerHTML = loadedEntries.map((entry) => `
+    <div class="item">
+      <div>
+        <strong>${esc(entry.date)}</strong>
+        <div class="meta">${parseInt(entry.duration, 10) || 0} min</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-ghost" type="button" data-edit="${esc(entry.date)}">Edit</button>
+        <button class="btn btn-ghost danger" type="button" data-delete="${esc(entry.date)}">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+async function loadAll() {
+  const [entriesData, takeawaysData] = await Promise.all([
+    api('/api/entries', {}, selectedUserId),
+    api('/api/takeaways', {}, selectedUserId),
+  ]);
+  renderEntriesList(entriesData.entries || []);
+  els.takeawaysText.value = (takeawaysData.items || []).join('\n');
+  els.entryForm.reset();
+  els.entryForm.dataset.originalDate = '';
+}
+
+async function configureAdminSelector() {
+  if (currentUser.role !== 'admin') {
+    els.viewerControls.hidden = true;
+    return;
+  }
+  const data = await api('/api/users');
+  els.viewerSelect.innerHTML = (data.users || []).map((u) =>
+    `<option value="${esc(u.id)}">${esc(u.displayName)}${u.id === currentUser.id ? ' (me)' : ''}</option>`
+  ).join('');
+  els.viewerSelect.value = currentUser.id;
+  els.viewerControls.hidden = false;
+  els.viewerSelect.addEventListener('change', async () => {
+    selectedUserId = els.viewerSelect.value;
+    await loadAll();
+  });
+}
+
+els.entriesList.addEventListener('click', async (e) => {
+  const editDate = e.target && e.target.getAttribute('data-edit');
+  const deleteDate = e.target && e.target.getAttribute('data-delete');
+
+  if (editDate) {
+    const entry = loadedEntries.find((x) => x.date === editDate);
+    if (!entry) return;
+    els.entryDate.value = entry.date || '';
+    els.entryDuration.value = entry.duration || '';
+    els.entryNotes.value = entry.notes || '';
+    els.entryForm.dataset.originalDate = entry.date || '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    toast(`Loaded ${entry.date}`);
+  }
+
+  if (deleteDate) {
+    if (!confirm(`Delete the ${deleteDate} entry?`)) return;
+    try {
+      await api(`/api/entries/${encodeURIComponent(deleteDate)}`, { method: 'DELETE' }, selectedUserId);
+      await loadAll();
+      toast('Entry deleted');
+    } catch (err) {
+      console.error(err);
+      toast(err.message || 'Delete failed');
     }
   }
 });
 
-function toast(msg) {
-  els.toast.textContent = msg; els.toast.hidden = false;
-  setTimeout(()=> els.toast.hidden = true, 2200);
-}
-
-function getToken() {
-  const m = location.hash.match(/[#/]token=([^&]+)/);
-  const hashTok = m ? decodeURIComponent(m[1]) : null;
-  if (hashTok) {
-    localStorage.setItem('gh_token', hashTok);
-    history.replaceState(null,'','#/');
-  }
-  return localStorage.getItem('gh_token');
-}
-
-function setAuthedUI(user) {
-  els.loginBtn.hidden = true;
-  els.userBadge.hidden = false;
-  els.userAvatar.src = user.avatar_url;
-  els.userName.textContent = user.login;
-}
-function setLoggedOutUI() {
-  els.loginBtn.hidden = false;
-  els.userBadge.hidden = true;
-}
-
-async function gh(path, init={}) {
-  const token = getToken();
-  if (!token) throw new Error('No token');
-  const headers = Object.assign({
-    'Authorization': `token ${token}`,
-    'Accept': 'application/vnd.github+json',
-    'User-Agent': 'meditation-admin'
-  }, init.headers||{});
-  const r = await fetch(`https://api.github.com${path}`, Object.assign({}, init, { headers }));
-  if (!r.ok) {
-    const t = await r.text();
-    throw new Error(`GitHub ${r.status} ${r.statusText}: ${t}`);
-  }
-  return r;
-}
-async function getUser() {
-  const r = await gh('/user'); return r.json();
-}
-
-/* ----- Repo Helpers (GET/PUT contents) ----- */
-async function getFile(path) {
-  const r = await gh(`/repos/${REPO}/contents/${encodeURIComponent(path)}?ref=${BRANCH}`);
-  return r.json(); // { content, encoding, sha, ... }
-}
-async function putFile(path, content, sha, message) {
-  const body = {
-    message,
-    content: btoa(unescape(encodeURIComponent(content))),
-    branch: BRANCH
-  };
-  if (sha) body.sha = sha;
-  const r = await gh(`/repos/${REPO}/contents/${encodeURIComponent(path)}`, {
-    method: 'PUT',
-    body: JSON.stringify(body)
-  });
-  return r.json();
-}
-
-/* ----- Entries Index helpers ----- */
-async function loadIndex() {
-  try {
-    const j = await getFile(`${BASE}/entries/index.json`);
-    const txt = atob(j.content);
-    const data = JSON.parse(decodeURIComponent(escape(txt)));
-    return { list: Array.isArray(data.files) ? data.files : [], sha: j.sha };
-  } catch (e) {
-    // create an empty index if missing
-    return { list: [], sha: null };
-  }
-}
-async function saveIndex(files, sha) {
-  const json = JSON.stringify({ files }, null, 2) + "\n";
-  return putFile(`${BASE}/entries/index.json`, json, sha, "Update entries index");
-}
-
-/* ----- Takeaways ----- */
-async function loadTakeaways() {
-  const j = await getFile(`${BASE}/takeaways.json`);
-  const txt = atob(j.content);
-  const data = JSON.parse(decodeURIComponent(escape(txt)));
-  return { items: data.items || [], sha: j.sha };
-}
-async function saveTakeaways(items, sha) {
-  const json = JSON.stringify({ items }, null, 2) + "\n";
-  return putFile(`${BASE}/takeaways.json`, json, sha, "Update takeaways");
-}
-
-/* ----- Entries list ----- */
-function renderEntriesList(files) {
-  if (!files.length) {
-    els.entriesList.innerHTML = `<div class="muted">No entries yet.</div>`;
-    return;
-  }
-  els.entriesList.innerHTML = files.map(f => {
-    const d = f.replace('.json','');
-    return `<div class="item">
-      <div><strong>${d}</strong><div class="meta">${BASE}/entries/${f}</div></div>
-      <div>
-        <button class="btn btn-ghost" data-edit="${f}">Edit</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* ----- Load everything after login ----- */
-async function loadAll() {
-  // load entries index
-  const idx = await loadIndex();
-  renderEntriesList(idx.list);
-
-  // load takeaways
-  try {
-    const tk = await loadTakeaways();
-    els.takeawaysText.value = (tk.items || []).join("\n");
-    els.takeawaysText.dataset.sha = tk.sha || "";
-  } catch {
-    // if missing, leave blank
-    els.takeawaysText.value = "";
-    els.takeawaysText.dataset.sha = "";
-  }
-
-  // wire edit buttons
-  els.entriesList.addEventListener('click', async (e) => {
-    const f = e.target && e.target.getAttribute('data-edit');
-    if (!f) return;
-    try {
-      const j = await getFile(`${BASE}/entries/${f}`);
-      const txt = atob(j.content);
-      const data = JSON.parse(decodeURIComponent(escape(txt)));
-      els.entryDate.value = data.date || f.replace('.json','');
-      els.entryDuration.value = data.duration || '';
-      els.entryNotes.value = data.notes || '';
-      els.entryForm.dataset.sha = j.sha;
-      toast(`Loaded ${f}`);
-    } catch (err) {
-      console.error(err); toast('Failed to load entry');
-    }
-  });
-
-  // keep index sha around
-  els.entriesList.dataset.indexSha = idx.sha || "";
-  els.entriesList.dataset.files = JSON.stringify(idx.list);
-}
-
-/* ----- Save Entry ----- */
 els.entryForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const date = els.entryDate.value;
-  const dur = parseInt(els.entryDuration.value, 10) || 0;
-  const notes = els.entryNotes.value || "";
+  const duration = parseInt(els.entryDuration.value, 10) || 0;
+  const notes = els.entryNotes.value || '';
 
-  if (!date || dur < 1) { toast("Date and duration required."); return; }
+  if (!date || duration < 1) {
+    toast('Date and duration required.');
+    return;
+  }
 
-  const file = `${date}.json`;
-  const path = `${BASE}/entries/${file}`;
-  const content = JSON.stringify({ date, duration: dur, notes }, null, 2) + "\n";
-  const sha = els.entryForm.dataset.sha || null;
+  const originalDate = els.entryForm.dataset.originalDate || '';
+  if (originalDate && originalDate !== date) {
+    toast('To change an entry date, delete the old entry and save a new one.');
+    return;
+  }
 
   try {
-    await putFile(path, content, sha || undefined, sha ? `Update ${file}` : `Add ${file}`);
-    // ensure index includes the file
-    const current = JSON.parse(els.entriesList.dataset.files || "[]");
-    if (!current.includes(file)) current.push(file);
-    current.sort(); // keep sorted
-    const indexSha = els.entriesList.dataset.indexSha || null;
-    await saveIndex(current, indexSha || undefined);
-
-    // reset state
-    els.entryForm.dataset.sha = "";
-    els.entriesList.dataset.files = JSON.stringify(current);
+    await api('/api/entries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, duration, notes }),
+    }, selectedUserId);
     await loadAll();
-    toast("Entry saved!");
+    toast('Entry saved!');
   } catch (err) {
     console.error(err);
-    toast("Save failed (see console).");
+    toast(err.message || 'Save failed');
   }
 });
 
-/* ----- Save Takeaways ----- */
 els.saveTakeawaysBtn.addEventListener('click', async () => {
-  const items = els.takeawaysText.value.split("\n").map(s => s.trim()).filter(Boolean);
+  const items = els.takeawaysText.value.split('\n').map(s => s.trim()).filter(Boolean);
   try {
-    await saveTakeaways(items, els.takeawaysText.dataset.sha || undefined);
-    toast("Takeaways saved!");
+    await api('/api/takeaways', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    }, selectedUserId);
+    toast('Takeaways saved!');
   } catch (err) {
     console.error(err);
-    toast("Save failed (see console).");
+    toast(err.message || 'Save failed');
   }
 });
 
-/* ----- Tabs ----- */
-els.tabs.forEach(btn => {
+els.tabs.forEach((btn) => {
   btn.addEventListener('click', () => {
     els.tabs.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -251,36 +201,36 @@ els.tabs.forEach(btn => {
   });
 });
 
-/* ----- Auth buttons ----- */
 els.loginBtn.addEventListener('click', () => {
-  const w = window.open(`${OAUTH_BASE}/auth`, 'ghoauth', 'width=900,height=700');
-  // Fallback: listen for hash-callback after popup posts the token & redirects
-  const timer = setInterval(() => {
-    const tok = getToken();
-    if (tok) { clearInterval(timer); afterLogin(); }
-  }, 400);
-});
-els.logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('gh_token');
-  setLoggedOutUI();
+  window.location.assign(`${API_BASE}/auth`);
 });
 
-/* ----- Boot ----- */
-async function afterLogin() {
+els.logoutBtn.addEventListener('click', async () => {
   try {
-    const user = await getUser();
-    setAuthedUI(user);
-    await loadAll();
-  } catch (err) {
-    console.error(err);
-    toast("Auth failed—try logging in again.");
-    setLoggedOutUI();
+    await api('/api/logout', { method: 'POST' });
+  } finally {
+    window.location.href = '/meditation/';
   }
-}
+});
 
 (async function boot() {
-  // preferred: read token from hash (popup redirect) or from localStorage
-  getToken();
-  const tok = localStorage.getItem('gh_token');
-  if (tok) { await afterLogin(); } else { setLoggedOutUI(); }
+  try {
+    currentUser = await api('/api/me');
+  } catch (err) {
+    if (err.status === 401) {
+      showLogin();
+      return;
+    }
+    console.error(err);
+    showLogin();
+    return;
+  }
+
+  els.userAvatar.src = currentUser.avatar_url || '';
+  els.userName.textContent = currentUser.displayName || currentUser.login;
+  els.userBadge.hidden = false;
+  selectedUserId = currentUser.id;
+  showEditor();
+  await configureAdminSelector();
+  await loadAll();
 })();

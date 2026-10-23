@@ -46,3 +46,18 @@ a { color: var(--accent); text-decoration: none; }
 @media (max-width: 520px){
   .center-link{ font-size: 1rem; }
 }
+
+[hidden] { display:none !important; }
+.auth-panel { max-width:460px; margin:14vh auto 0; padding:30px; text-align:center; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.auth-panel h1 { margin-top:0; }
+.auth-panel .btn { margin-top:16px; }
+.viewer-controls { display:flex; align-items:center; gap:7px; }
+.viewer-controls label { color:var(--muted); font-size:.85rem; }
+.viewer-controls select { border:1px solid var(--line); background:#fff; color:var(--ink); padding:7px 8px; border-radius:8px; }
+.item-actions { display:flex; gap:6px; }
+.danger { color:#8d3434; }
+@media (max-width:700px) {
+  .topbar { flex-wrap:wrap; }
+  .center-link { position:static; transform:none; order:3; width:100%; text-align:center; }
+  .viewer-controls { order:2; }
+}
